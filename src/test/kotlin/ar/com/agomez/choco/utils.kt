@@ -28,7 +28,6 @@ import org.chocosolver.solver.expression.discrete.logical.BiLoExpression
 import org.chocosolver.solver.expression.discrete.logical.NaLoExpression
 import org.chocosolver.solver.expression.discrete.relational.BiReExpression
 import org.chocosolver.solver.expression.discrete.relational.NaReExpression
-import org.chocosolver.solver.variables.impl.FixedBoolVarImpl
 import org.chocosolver.solver.variables.impl.FixedRealVarImpl
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
@@ -55,10 +54,6 @@ fun reflectiveAssert(actual: BiArExpression, expected: BiArExpression) {
 fun reflectiveAssert(actual: NaArExpression, expected: NaArExpression) {
     Assertions.assertThat(getProperty(actual, "op")).isEqualTo(getProperty(expected, "op"))
     Assertions.assertThat(getProperty(actual, "es")).isEqualTo(getProperty(expected, "es"))
-}
-
-fun reflectiveAssert(actual: FixedBoolVarImpl, expected: FixedBoolVarImpl) {
-    Assertions.assertThat(getProperty(actual, "constante")).isEqualTo(getProperty(expected, "constante"))
 }
 
 fun reflectiveAssert(actual: BiReExpression, expected: BiReExpression) {
