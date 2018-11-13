@@ -63,6 +63,17 @@ operator fun ArExpression.plus(e: ArExpression): ArExpression = add(e)
 operator fun ArExpression.plus(o: Array<out ArExpression>): ArExpression = add(*o)
 
 /**
+ * Extension for [ArExpression.add] for invoking it as the operator `+`.
+ *
+ * @receiver The lhs of the operation.
+ * @param o The rhs of the operation.
+ * @return The expression `lhs + rhs_1 + rhs_2 ... + rhs_n`
+ * @author Alejandro Gomez
+ * @since 0.0.3
+ */
+operator fun ArExpression.plus(o: Iterable<ArExpression>): ArExpression = add(*o.asTypedArray())
+
+/**
  * Extension for [ArExpression.sub] for invoking it as the operator `-`.
  *
  * @receiver The lhs of the operation.
@@ -116,6 +127,17 @@ operator fun ArExpression.times(o: ArExpression): ArExpression = mul(o)
  * @since 0.0.1
  */
 operator fun ArExpression.times(o: Array<out ArExpression>): ArExpression = mul(*o)
+
+/**
+ * Extension for [ArExpression.mul] for invoking it as the operator `*`.
+ *
+ * @receiver The lhs of the operation.
+ * @param o The rhs of the operation.
+ * @return The expression `lhs * rhs_1 * rhs_2 ... * rhs_n`
+ * @author Alejandro Gomez
+ * @since 0.0.3
+ */
+operator fun ArExpression.times(o: Iterable<ArExpression>): ArExpression = mul(*o.asTypedArray())
 
 /**
  * Extension for [ArExpression.mod] for invoking it as the operator `%`.
@@ -193,6 +215,17 @@ infix fun ArExpression.eq(e: ArExpression): ReExpression = eq(e)
  * @since 0.0.1
  */
 infix fun ArExpression.eq(e: Array<out ArExpression>): ReExpression = eq(*e)
+
+/**
+ * Extension for [ArExpression.eq] for invoking it in infix mode.
+ *
+ * @receiver The lhs of the comparison.
+ * @param e The rhs of the comparison.
+ * @return The expression `lhs == rhs_1 == rhs_2 ... == rhs_n`
+ * @author Alejandro Gomez
+ * @since 0.0.3
+ */
+infix fun ArExpression.eq(e: Iterable<ArExpression>): ReExpression = eq(e.asTypedArray())
 
 /**
  * Extension for [ArExpression.ne] for invoking it in infix mode.

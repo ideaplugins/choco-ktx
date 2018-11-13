@@ -68,6 +68,11 @@ class ArExpressionExtensionsTest {
     }
 
     @Test
+    fun testArExpressionPlusIterableArExpression() {
+        assertEqualExpressions(expr1 + listOf(expr2, expr3), expr1.add(expr2, expr3))
+    }
+
+    @Test
     fun testArExpressionMinusConstant() {
         assertEqualExpressions(expr1 - 1, expr1.sub(1))
     }
@@ -90,6 +95,11 @@ class ArExpressionExtensionsTest {
     @Test
     fun testArExpressionTimesManyArExpression() {
         assertEqualExpressions(expr1 * arrayOf(expr2, expr3), expr1.mul(expr2, expr3))
+    }
+
+    @Test
+    fun testArExpressionTimesIterableArExpression() {
+        assertEqualExpressions(expr1 * listOf(expr2, expr3), expr1.mul(expr2, expr3))
     }
 
     @Test
@@ -135,6 +145,11 @@ class ArExpressionExtensionsTest {
     @Test
     fun testArExpressionEqManyArExpression() {
         assertEqualExpressions(expr1 eq arrayOf(expr2, expr3), expr1.eq(expr2, expr3))
+    }
+
+    @Test
+    fun testArExpressionEqIterableArExpression() {
+        assertEqualExpressions(expr1 eq listOf(expr2, expr3), expr1.eq(expr2, expr3))
     }
 
     @Test

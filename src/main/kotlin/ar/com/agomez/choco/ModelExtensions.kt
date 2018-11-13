@@ -19,12 +19,15 @@ package ar.com.agomez.choco
 import org.chocosolver.solver.Model
 import org.chocosolver.solver.constraints.Constraint
 import org.chocosolver.solver.constraints.Operator
+import org.chocosolver.solver.constraints.nary.alldifferent.conditions.Condition
 import org.chocosolver.solver.variables.BoolVar
 import org.chocosolver.solver.variables.IntVar
 import org.chocosolver.solver.variables.RealVar
 import org.chocosolver.solver.variables.Variable
 
 typealias DoubleRange = ClosedFloatingPointRange<Double>
+
+typealias Matrix<T> = Array<out Array<out T>>
 
 /**
  *  Top level function acting as a Kotlin shortcut allowing to create a [Model] and execute some code in its context.
@@ -58,7 +61,7 @@ fun <T> runWithModel(name: String, block: Model.() -> T): T = Model(name).block(
  * @author Alejandro Gomez
  * @since 0.0.1
  */
-fun Model.digit(name: String, boundedDomain: Boolean = false) = intVar(name, 0, 9, boundedDomain)
+fun Model.digit(name: String, boundedDomain: Boolean = false): IntVar = intVar(name, 0, 9, boundedDomain)
 
 /**
  * Extension for [Model.intVar] to define an integer variable with values in 1..9 range.
@@ -69,7 +72,7 @@ fun Model.digit(name: String, boundedDomain: Boolean = false) = intVar(name, 0, 
  * @author Alejandro Gomez
  * @since 0.0.1
  */
-fun Model.digitNonZero(name: String, boundedDomain: Boolean = false) = intVar(name, 1, 9, boundedDomain)
+fun Model.digitNonZero(name: String, boundedDomain: Boolean = false): IntVar = intVar(name, 1, 9, boundedDomain)
 
 /**
  * Extension for [Model.setObjective] to specify the objective variable to minimize.
@@ -191,7 +194,7 @@ fun Model.intVarArray(name: String, size: Int, values: IntRange, boundedDomain: 
  * @author Alejandro Gomez
  * @since 0.0.1
  */
-fun Model.intVarMatrix(dim1: Int, dim2: Int, values: IntRange): Array<out Array<out IntVar>> = intVarMatrix(dim1, dim2, values.first, values.last)
+fun Model.intVarMatrix(dim1: Int, dim2: Int, values: IntRange): Matrix<IntVar> = intVarMatrix(dim1, dim2, values.first, values.last)
 
 /**
  * Extension for [Model.intVarMatrix] to declare a variable array using an [IntRange].
@@ -204,7 +207,7 @@ fun Model.intVarMatrix(dim1: Int, dim2: Int, values: IntRange): Array<out Array<
  * @author Alejandro Gomez
  * @since 0.0.1
  */
-fun Model.intVarMatrix(dim1: Int, dim2: Int, values: IntRange, boundedDomain: Boolean): Array<out Array<out IntVar>> = intVarMatrix(dim1, dim2, values.first, values.last, boundedDomain)
+fun Model.intVarMatrix(dim1: Int, dim2: Int, values: IntRange, boundedDomain: Boolean): Matrix<IntVar> = intVarMatrix(dim1, dim2, values.first, values.last, boundedDomain)
 
 /**
  * Extension for [Model.intVarMatrix] to declare a variable array using an [IntRange].
@@ -217,7 +220,7 @@ fun Model.intVarMatrix(dim1: Int, dim2: Int, values: IntRange, boundedDomain: Bo
  * @author Alejandro Gomez
  * @since 0.0.1
  */
-fun Model.intVarMatrix(name: String, dim1: Int, dim2: Int, values: IntRange): Array<out Array<out IntVar>> = intVarMatrix(name, dim1, dim2, values.first, values.last)
+fun Model.intVarMatrix(name: String, dim1: Int, dim2: Int, values: IntRange): Matrix<IntVar> = intVarMatrix(name, dim1, dim2, values.first, values.last)
 
 /**
  * Extension for [Model.intVarMatrix] to declare a variable array using an [IntRange].
@@ -231,7 +234,7 @@ fun Model.intVarMatrix(name: String, dim1: Int, dim2: Int, values: IntRange): Ar
  * @author Alejandro Gomez
  * @since 0.0.1
  */
-fun Model.intVarMatrix(name: String, dim1: Int, dim2: Int, values: IntRange, boundedDomain: Boolean): Array<out Array<out IntVar>> = intVarMatrix(name, dim1, dim2, values.first, values.last, boundedDomain)
+fun Model.intVarMatrix(name: String, dim1: Int, dim2: Int, values: IntRange, boundedDomain: Boolean): Matrix<IntVar> = intVarMatrix(name, dim1, dim2, values.first, values.last, boundedDomain)
 
 /**
  * Extension for [Model.realVar] to declare a variable array using a [DoubleRange].
@@ -289,7 +292,7 @@ fun Model.realVarArray(name: String, size: Int, values: DoubleRange, precision: 
  * @author Alejandro Gomez
  * @since 0.0.1
  */
-fun Model.realVarMatrix(dim1: Int, dim2: Int, values: DoubleRange, precision: Double): Array<out Array<out RealVar>> = realVarMatrix(dim1, dim2, values.start, values.endInclusive, precision)
+fun Model.realVarMatrix(dim1: Int, dim2: Int, values: DoubleRange, precision: Double): Matrix<RealVar> = realVarMatrix(dim1, dim2, values.start, values.endInclusive, precision)
 
 /**
  * Extension for [Model.realVarMatrix] to declare a variable array using an [DoubleRange].
@@ -302,7 +305,7 @@ fun Model.realVarMatrix(dim1: Int, dim2: Int, values: DoubleRange, precision: Do
  * @author Alejandro Gomez
  * @since 0.0.1
  */
-fun Model.realVarMatrix(name: String, dim1: Int, dim2: Int, values: DoubleRange, precision: Double): Array<out Array<out RealVar>> = realVarMatrix(name, dim1, dim2, values.start, values.endInclusive, precision)
+fun Model.realVarMatrix(name: String, dim1: Int, dim2: Int, values: DoubleRange, precision: Double): Matrix<RealVar> = realVarMatrix(name, dim1, dim2, values.start, values.endInclusive, precision)
 
 /**
  * Extension for [Model.scalar] to declare a scalar constraint using pairs of coefficients and variables.
@@ -314,7 +317,7 @@ fun Model.realVarMatrix(name: String, dim1: Int, dim2: Int, values: DoubleRange,
  * @author Alejandro Gomez
  * @since 0.0.1
  */
-fun Model.scalar(terms: Iterable<Pair<Int, IntVar>>, operator: Operator, c: Int): Constraint =
+fun Model.scalar(terms: List<Pair<Int, IntVar>>, operator: Operator, c: Int): Constraint =
         scalar(terms.map { it.second }.toTypedArray(), terms.map { it.first }.toIntArray(), operator.toString(), c)
 
 /**
@@ -327,7 +330,7 @@ fun Model.scalar(terms: Iterable<Pair<Int, IntVar>>, operator: Operator, c: Int)
  * @author Alejandro Gomez
  * @since 0.0.1
  */
-fun Model.scalar(terms: Iterable<Pair<Int, IntVar>>, operator: Operator, v: IntVar): Constraint =
+fun Model.scalar(terms: List<Pair<Int, IntVar>>, operator: Operator, v: IntVar): Constraint =
         scalar(terms.map { it.second }.toTypedArray(), terms.map { it.first }.toIntArray(), operator.toString(), v)
 
 /**
@@ -341,7 +344,7 @@ fun Model.scalar(terms: Iterable<Pair<Int, IntVar>>, operator: Operator, v: IntV
  * @author Alejandro Gomez
  * @since 0.0.1
  */
-fun Model.scalar(terms: Iterable<Pair<Int, IntVar>>, operator: Operator, c: Int, minCardForDecomp: Int): Constraint =
+fun Model.scalar(terms: List<Pair<Int, IntVar>>, operator: Operator, c: Int, minCardForDecomp: Int): Constraint =
         scalar(terms.map { it.second }.toTypedArray(), terms.map { it.first }.toIntArray(), operator.toString(), c, minCardForDecomp)
 
 /**
@@ -355,7 +358,7 @@ fun Model.scalar(terms: Iterable<Pair<Int, IntVar>>, operator: Operator, c: Int,
  * @author Alejandro Gomez
  * @since 0.0.1
  */
-fun Model.scalar(terms: Iterable<Pair<Int, IntVar>>, operator: Operator, v: IntVar, minCardForDecomp: Int): Constraint =
+fun Model.scalar(terms: List<Pair<Int, IntVar>>, operator: Operator, v: IntVar, minCardForDecomp: Int): Constraint =
         scalar(terms.map { it.second }.toTypedArray(), terms.map { it.first }.toIntArray(), operator.toString(), v, minCardForDecomp)
 
 /**
@@ -376,12 +379,37 @@ fun Model.sum(vars: Array<out IntVar>, operator: Operator, sum: Int): Constraint
  * @param vars the variables to sum.
  * @param operator the operator for the comparison.
  * @param sum the rhs of the comparison.
+ * @return A sum constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.3
+ */
+fun Model.sum(vars: Iterable<IntVar>, operator: Operator, sum: Int): Constraint = sum(vars.asTypedArray(), operator.toString(), sum)
+
+/**
+ * Extension for [Model.sum] to declare a sum constraint using the [Operator] enum.
+ *
+ * @param vars the variables to sum.
+ * @param operator the operator for the comparison.
+ * @param sum the rhs of the comparison.
  * @param minCardForDecomp minimum number of cardinality threshold to a sum constraint to be decomposed.
  * @return A sum constraint.
  * @author Alejandro Gomez
  * @since 0.0.1
  */
 fun Model.sum(vars: Array<out IntVar>, operator: Operator, sum: Int, minCardForDecomp: Int): Constraint = sum(vars, operator.toString(), sum, minCardForDecomp)
+
+/**
+ * Extension for [Model.sum] to declare a sum constraint using the [Operator] enum.
+ *
+ * @param vars the variables to sum.
+ * @param operator the operator for the comparison.
+ * @param sum the rhs of the comparison.
+ * @param minCardForDecomp minimum number of cardinality threshold to a sum constraint to be decomposed.
+ * @return A sum constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.3
+ */
+fun Model.sum(vars: Iterable<IntVar>, operator: Operator, sum: Int, minCardForDecomp: Int): Constraint = sum(vars.asTypedArray(), operator.toString(), sum, minCardForDecomp)
 
 /**
  * Extension for [Model.sum] to declare a sum constraint using the [Operator] enum.
@@ -401,12 +429,37 @@ fun Model.sum(vars: Array<out IntVar>, operator: Operator, sum: IntVar): Constra
  * @param vars the variables to sum.
  * @param operator the operator for the comparison.
  * @param sum the rhs of the comparison.
+ * @return A sum constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.3
+ */
+fun Model.sum(vars: Iterable<IntVar>, operator: Operator, sum: IntVar): Constraint = sum(vars.asTypedArray(), operator.toString(), sum)
+
+/**
+ * Extension for [Model.sum] to declare a sum constraint using the [Operator] enum.
+ *
+ * @param vars the variables to sum.
+ * @param operator the operator for the comparison.
+ * @param sum the rhs of the comparison.
  * @param minCardForDecomp minimum number of cardinality threshold to a sum constraint to be decomposed.
  * @return A sum constraint.
  * @author Alejandro Gomez
  * @since 0.0.1
  */
 fun Model.sum(vars: Array<out IntVar>, operator: Operator, sum: IntVar, minCardForDecomp: Int): Constraint = sum(vars, operator.toString(), sum, minCardForDecomp)
+
+/**
+ * Extension for [Model.sum] to declare a sum constraint using the [Operator] enum.
+ *
+ * @param vars the variables to sum.
+ * @param operator the operator for the comparison.
+ * @param sum the rhs of the comparison.
+ * @param minCardForDecomp minimum number of cardinality threshold to a sum constraint to be decomposed.
+ * @return A sum constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.3
+ */
+fun Model.sum(vars: Iterable<IntVar>, operator: Operator, sum: IntVar, minCardForDecomp: Int): Constraint = sum(vars.asTypedArray(), operator.toString(), sum, minCardForDecomp)
 
 /**
  * Extension for [Model.sum] to declare a sum constraint using the [Operator] enum.
@@ -444,3 +497,89 @@ fun Model.sum(vars: Array<out BoolVar>, operator: Operator, sum: IntVar): Constr
  * @since 0.0.1
  */
 fun Model.sum(vars: Array<out BoolVar>, operator: Operator, sum: IntVar, minCardForDecomp: Int): Constraint = sum(vars, operator.toString(), sum, minCardForDecomp)
+
+fun Model.allDifferent(vars: Iterable<IntVar>): Constraint = allDifferent(*vars.asTypedArray())
+
+/**
+ * Consistency level for allDifferent constraint.
+ */
+enum class Consistency {
+    AC, BC, FC, NEQS, DEFAULT
+}
+
+/**
+ * Extension for [Model.allDifferent] that accepts the variables as [Iterable].
+ *
+ * @param vars the list of variables.
+ * @param consistency the consistency.
+ * @return An `allDifferent` constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.3
+ */
+fun Model.allDifferent(vars: Iterable<IntVar>, consistency: Consistency): Constraint = allDifferent(vars.asTypedArray(), consistency.name)
+
+/**
+ * Extension for [Model.allDifferentUnderCondition] that accepts the variables as [Iterable].
+ *
+ * @param vars the list of variables.
+ * @param condition condition defining which variables should be constrained.
+ * @param singleCondition specifies how to apply filtering.
+ * @return An `allDifferent` constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.3
+ */
+fun Model.allDifferentUnderCondition(vars: Iterable<IntVar>, condition: Condition, singleCondition: Boolean): Constraint = allDifferentUnderCondition(vars.asTypedArray(), condition, singleCondition)
+
+/**
+ * Extension for [Model.allDifferentExcept0] that accepts the variables as [Iterable].
+ *
+ * @param vars the list of variables.
+ * @return An `allDifferent` constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.3
+ */
+fun Model.allDifferentExcept0(vars: Iterable<IntVar>): Constraint = allDifferentExcept0(vars.asTypedArray())
+
+/**
+ * Extension for [Model.allEqual] that accepts the variables as [Iterable].
+ *
+ * @param vars the list of variables.
+ * @return An `allEqual` constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.3
+ */
+fun Model.allEqual(vars: Iterable<IntVar>): Constraint = allEqual(*vars.asTypedArray())
+
+/**
+ * Extension for [Model.notAllEqual] that accepts the variables as [Iterable].
+ *
+ * @param vars the list of variables.
+ * @return An `notAllEqual` constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.3
+ */
+fun Model.notAllEqual(vars: Iterable<IntVar>): Constraint = notAllEqual(*vars.asTypedArray())
+
+/**
+ * Extension for [Model.among] that accepts the variables as [Iterable].
+ *
+ * @param nbVar a variable.
+ * @param vars the list of variables.
+ * @param values the list of values.
+ * @return An `allDifferent` constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.3
+ */
+fun Model.among(nbVar: IntVar, vars: Iterable<IntVar>, values: IntArray): Constraint = among(nbVar, vars.asTypedArray(), values)
+
+/**
+ * Extension for [Model.among] that accepts the variables and the values as [Iterable].
+ *
+ * @param nbVar a variable.
+ * @param vars the list of variables.
+ * @param values the list of values.
+ * @return An `allDifferent` constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.3
+ */
+fun Model.among(nbVar: IntVar, vars: Iterable<IntVar>, values: Iterable<Int>): Constraint = among(nbVar, vars.asTypedArray(), values.asIntArray())
