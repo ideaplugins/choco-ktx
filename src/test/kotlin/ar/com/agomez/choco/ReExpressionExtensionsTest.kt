@@ -61,6 +61,11 @@ class ReExpressionExtensionsTest {
     }
 
     @Test
+    fun testReExpressionAndIterableReExpression() {
+        assertEqualExpressions(expr1 and listOf(expr2, expr3), expr1.and(expr2, expr3))
+    }
+
+    @Test
     fun testReExpressionOrReExpression() {
         assertEqualExpressions(expr1 or expr2, expr1.or(expr2))
     }
@@ -71,6 +76,11 @@ class ReExpressionExtensionsTest {
     }
 
     @Test
+    fun testReExpressionOrIterableReExpression() {
+        assertEqualExpressions(expr1 or listOf(expr2, expr3), expr1.or(expr2, expr3))
+    }
+
+    @Test
     fun testReExpressionXorReExpression() {
         assertEqualExpressions(expr1 xor expr2, expr1.xor(expr2))
     }
@@ -78,6 +88,11 @@ class ReExpressionExtensionsTest {
     @Test
     fun testReExpressionXorManyReExpression() {
         assertEqualExpressions(expr1 xor arrayOf(expr2, expr3), expr1.xor(expr2, expr3))
+    }
+
+    @Test
+    fun testReExpressionXorIterableReExpression() {
+        assertEqualExpressions(expr1 xor listOf(expr2, expr3), expr1.xor(expr2, expr3))
     }
 
     @Test
@@ -93,6 +108,11 @@ class ReExpressionExtensionsTest {
     @Test
     fun testReExpressionIffManyReExpression() {
         assertEqualExpressions(expr1 iff arrayOf(expr2, expr3), expr1.iff(expr2, expr3))
+    }
+
+    @Test
+    fun testReExpressionIffIterableReExpression() {
+        assertEqualExpressions(expr1 iff listOf(expr2, expr3), expr1.iff(expr2, expr3))
     }
 
     private fun assertEqualExpressions(actual: ReExpression, expected: ReExpression) {

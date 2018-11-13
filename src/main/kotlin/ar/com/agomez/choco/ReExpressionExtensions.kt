@@ -51,6 +51,17 @@ infix fun ReExpression.and(e: ReExpression): ReExpression = and(e)
 infix fun ReExpression.and(e: Array<out ReExpression>): ReExpression = and(*e)
 
 /**
+ * Extension for [ReExpression.and] for invoking it in infix mode.
+ *
+ * @receiver The lhs of the expression.
+ * @param e The rhs of the comparison.
+ * @return The expression `lhs and rhs_1 and rhs_2 ... and rhs_n`
+ * @author Alejandro Gomez
+ * @since 0.0.3
+ */
+infix fun ReExpression.and(e: Iterable<ReExpression>): ReExpression = and(e.asTypedArray())
+
+/**
  * Extension for [ReExpression.or] for invoking it in infix mode.
  *
  * @receiver The lhs of the expression.
@@ -73,6 +84,17 @@ infix fun ReExpression.or(e: ReExpression): ReExpression = or(e)
 infix fun ReExpression.or(e: Array<out ReExpression>): ReExpression = or(*e)
 
 /**
+ * Extension for [ReExpression.or] for invoking it in infix mode.
+ *
+ * @receiver The lhs of the expression.
+ * @param e The rhs of the comparison.
+ * @return The expression `lhs or rhs_1 or rhs_2 ... or rhs_n`
+ * @author Alejandro Gomez
+ * @since 0.0.3
+ */
+infix fun ReExpression.or(e: Iterable<ReExpression>): ReExpression = or(e.asTypedArray())
+
+/**
  * Extension for [ReExpression.xor] for invoking it in infix mode.
  *
  * @receiver The lhs of the expression.
@@ -93,6 +115,17 @@ infix fun ReExpression.xor(e: ReExpression): ReExpression = xor(e)
  * @since 0.0.1
  */
 infix fun ReExpression.xor(e: Array<out ReExpression>): ReExpression = xor(*e)
+
+/**
+ * Extension for [ReExpression.xor] for invoking it in infix mode.
+ *
+ * @receiver The lhs of the expression.
+ * @param e The rhs of the comparison.
+ * @return The expression `lhs xor rhs_1 xor rhs_2 ... xor rhs_n`
+ * @author Alejandro Gomez
+ * @since 0.0.3
+ */
+infix fun ReExpression.xor(e: Iterable<ReExpression>): ReExpression = xor(e.asTypedArray())
 
 /**
  * Extension for [ReExpression.imp] for invoking it in infix mode.
@@ -126,3 +159,14 @@ infix fun ReExpression.iff(e: ReExpression): ReExpression = iff(e)
  * @since 0.0.1
  */
 infix fun ReExpression.iff(e: Array<out ReExpression>): ReExpression = iff(*e)
+
+/**
+ * Extension for [ReExpression.iff] for invoking it in infix mode.
+ *
+ * @receiver The lhs of the expression.
+ * @param e The rhs of the comparison.
+ * @return The expression `lhs iff rhs_1 iff rhs_2 ... iff rhs_n`
+ * @author Alejandro Gomez
+ * @since 0.0.3
+ */
+infix fun ReExpression.iff(e: Iterable<ReExpression>): ReExpression = iff(e.asTypedArray())

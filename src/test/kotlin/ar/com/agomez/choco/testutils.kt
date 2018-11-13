@@ -18,17 +18,14 @@ package ar.com.agomez.choco
 
 import org.assertj.core.api.Assertions
 import org.assertj.core.data.Offset
+import org.chocosolver.solver.constraints.Constraint
 import org.chocosolver.solver.expression.continuous.arithmetic.BiCArExpression
 import org.chocosolver.solver.expression.continuous.arithmetic.UnCArExpression
 import org.chocosolver.solver.expression.continuous.relational.BiCReExpression
-import org.chocosolver.solver.expression.discrete.arithmetic.BiArExpression
-import org.chocosolver.solver.expression.discrete.arithmetic.NaArExpression
-import org.chocosolver.solver.expression.discrete.arithmetic.UnArExpression
 import org.chocosolver.solver.expression.discrete.logical.BiLoExpression
 import org.chocosolver.solver.expression.discrete.logical.NaLoExpression
 import org.chocosolver.solver.expression.discrete.relational.BiReExpression
 import org.chocosolver.solver.expression.discrete.relational.NaReExpression
-import org.chocosolver.solver.variables.impl.FixedBoolVarImpl
 import org.chocosolver.solver.variables.impl.FixedRealVarImpl
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
@@ -40,26 +37,6 @@ inline fun <reified T : Any> getProperty(obj: T, name: String) = T::class.member
         .first { it.name == name }
         .also { it.isAccessible = true }
         .get(obj)
-
-fun reflectiveAssert(actual: UnArExpression, expected: UnArExpression) {
-    Assertions.assertThat(getProperty(actual, "op")).isEqualTo(getProperty(expected, "op"))
-    Assertions.assertThat(getProperty(actual, "e")).isEqualTo(getProperty(expected, "e"))
-}
-
-fun reflectiveAssert(actual: BiArExpression, expected: BiArExpression) {
-    Assertions.assertThat(getProperty(actual, "op")).isEqualTo(getProperty(expected, "op"))
-    Assertions.assertThat(getProperty(actual, "e1")).isEqualTo(getProperty(expected, "e1"))
-    Assertions.assertThat(getProperty(actual, "e2")).isEqualTo(getProperty(expected, "e2"))
-}
-
-fun reflectiveAssert(actual: NaArExpression, expected: NaArExpression) {
-    Assertions.assertThat(getProperty(actual, "op")).isEqualTo(getProperty(expected, "op"))
-    Assertions.assertThat(getProperty(actual, "es")).isEqualTo(getProperty(expected, "es"))
-}
-
-fun reflectiveAssert(actual: FixedBoolVarImpl, expected: FixedBoolVarImpl) {
-    Assertions.assertThat(getProperty(actual, "constante")).isEqualTo(getProperty(expected, "constante"))
-}
 
 fun reflectiveAssert(actual: BiReExpression, expected: BiReExpression) {
     Assertions.assertThat(getProperty(actual, "op")).isEqualTo(getProperty(expected, "op"))
@@ -118,4 +95,9 @@ fun reflectiveAssert(e1: FixedRealVarImpl, e2: FixedRealVarImpl) {
     Assertions.assertThat(e1.lb).isEqualTo(e2.lb, offset)
     Assertions.assertThat(e1.ub).isEqualTo(e2.ub, offset)
     Assertions.assertThat(e1.precision).isEqualTo(e2.precision, offset)
+}
+
+fun assertOnConstraint(c1: Constraint, c2: Constraint) {
+    Assertions.assertThat(c1).hasSameClassAs(c2)
+    Assertions.assertThat(c1).hasToString(c2.toString())
 }

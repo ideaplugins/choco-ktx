@@ -78,6 +78,27 @@ model("my first problem") {
 }
 ```
 
+### Magic square problem
+
+```kotlin
+model("magic square") {
+    val n = 3
+    val d = n * (n * n + 1) / 2
+    val m = intVarMatrix("X", n, n, 1, n * n)
+    allDifferent(m.flatMap { it.asIterable() }).post()
+    m.forEach {
+        sum { it eq d }.post()
+    }
+    (0 until n).forEach { j ->
+        sum { (0 until n).map { i -> m[i][j] } eq d }.post()
+    }
+    sum { (0 until n).map { i -> m[i][i] } eq d }.post()
+    sum { (0 until n).map { i -> m[i][n - i - 1] } eq d }.post()
+    solver.showSolutions()
+    solver.solveAll()
+}
+```
+
 For more examples check the API documentation and the tests.
 
 ## License

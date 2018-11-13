@@ -21,6 +21,7 @@ import org.chocosolver.solver.Model
 import org.chocosolver.solver.ResolutionPolicy
 import org.chocosolver.solver.constraints.Constraint
 import org.chocosolver.solver.constraints.Operator
+import org.chocosolver.solver.constraints.nary.alldifferent.conditions.Condition
 import org.chocosolver.solver.variables.BoolVar
 import org.chocosolver.solver.variables.IntVar
 import org.chocosolver.solver.variables.RealVar
@@ -263,8 +264,18 @@ class ModelExtensionsTest {
     }
 
     @Test
+    fun testSumIterabledVsConstant() {
+        assertOnSumConstraint(model.sum(listOf(x, y), Operator.LT, 20), model.sum(arrayOf(x, y), "<", 20))
+    }
+
+    @Test
     fun testSumVsIntVar() {
         assertOnSumConstraint(model.sum(arrayOf(x, y), Operator.LT, z), model.sum(arrayOf(x, y), "<", z))
+    }
+
+    @Test
+    fun testSumIterableVsIntVar() {
+        assertOnSumConstraint(model.sum(listOf(x, y), Operator.LT, z), model.sum(arrayOf(x, y), "<", z))
     }
 
     @Test
@@ -273,8 +284,18 @@ class ModelExtensionsTest {
     }
 
     @Test
+    fun testSumIterableVsConstantWithCardinality() {
+        assertOnSumConstraint(model.sum(listOf(x, y), Operator.LT, 20, 3), model.sum(arrayOf(x, y), "<", 20, 3))
+    }
+
+    @Test
     fun testSumVsIntVarWithCardinality() {
         assertOnSumConstraint(model.sum(arrayOf(x, y), Operator.LT, z, 3), model.sum(arrayOf(x, y), "<", z, 3))
+    }
+
+    @Test
+    fun testSumIterableVsIntVarWithCardinality() {
+        assertOnSumConstraint(model.sum(listOf(x, y), Operator.LT, z, 3), model.sum(arrayOf(x, y), "<", z, 3))
     }
 
     @Test
@@ -283,13 +304,68 @@ class ModelExtensionsTest {
     }
 
     @Test
+    fun testSumBoolIterableVsConstant() {
+        assertOnSumConstraint(model.sum(listOf(v, w), Operator.NQ, 20), model.sum(arrayOf(v, w), "!=", 20))
+    }
+
+    @Test
     fun testSumBoolVsIntVar() {
         assertOnSumConstraint(model.sum(arrayOf(v, w), Operator.NQ, z), model.sum(arrayOf(v, w), "!=", z))
     }
 
     @Test
+    fun testSumBoolIterableVsIntVar() {
+        assertOnSumConstraint(model.sum(listOf(v, w), Operator.NQ, z), model.sum(arrayOf(v, w), "!=", z))
+    }
+
+    @Test
     fun testSumBoolVsIntVarWithCardinality() {
         assertOnSumConstraint(model.sum(arrayOf(v, w), Operator.NQ, z, 3), model.sum(arrayOf(v, w), "!=", z, 3))
+    }
+
+    @Test
+    fun testSumBoolIterableVsIntVarWithCardinality() {
+        assertOnSumConstraint(model.sum(listOf(v, w), Operator.NQ, z, 3), model.sum(arrayOf(v, w), "!=", z, 3))
+    }
+
+    @Test
+    fun testAllDifferent() {
+        assertOnConstraint(model.allDifferent(listOf(x, y, z)), model.allDifferent(x, y, z))
+    }
+
+    @Test
+    fun testAllDifferentWithConsistency() {
+        assertOnConstraint(model.allDifferent(listOf(x, y, z), Consistency.BC), model.allDifferent(arrayOf(x, y, z), "BC"))
+    }
+
+    @Test
+    fun testAllDifferentUnderCondition() {
+        assertOnConstraint(model.allDifferentUnderCondition(listOf(x, y, z), Condition.TRUE, true), model.allDifferentUnderCondition(arrayOf(x, y, z), Condition.TRUE, true))
+    }
+
+    @Test
+    fun testAllDifferentExcept0() {
+        assertOnConstraint(model.allDifferentExcept0(listOf(x, y, z)), model.allDifferentExcept0(arrayOf(x, y, z)))
+    }
+
+    @Test
+    fun testAllEqual() {
+        assertOnConstraint(model.allEqual(listOf(x, y, z)), model.allEqual(x, y, z))
+    }
+
+    @Test
+    fun testNotAllEqual() {
+        assertOnConstraint(model.notAllEqual(listOf(x, y, z)), model.notAllEqual(x, y, z))
+    }
+
+    @Test
+    fun testAmong() {
+        assertOnConstraint(model.among(x, listOf(x, y, z), intArrayOf(1, 2)), model.among(x, arrayOf(x, y, z), intArrayOf(1, 2)))
+    }
+
+    @Test
+    fun testAmongList() {
+        assertOnConstraint(model.among(x, listOf(x, y, z), listOf(1, 2)), model.among(x, arrayOf(x, y, z), intArrayOf(1, 2)))
     }
 
     private fun assertOnIntVar(v: IntVar, lb: Int, ub: Int, name: String? = null, hasEnumeratedDomain: Boolean? = null) {
@@ -315,7 +391,7 @@ class ModelExtensionsTest {
         }
     }
 
-    private fun assertOnIntVarMatrix(vs: Array<out Array<out IntVar>>, dim1: Int, dim2: Int, lb: Int, ub: Int, name: String? = null, hasEnumeratedDomain: Boolean? = null) {
+    private fun assertOnIntVarMatrix(vs: Matrix<IntVar>, dim1: Int, dim2: Int, lb: Int, ub: Int, name: String? = null, hasEnumeratedDomain: Boolean? = null) {
         Assertions.assertThat(vs).hasSize(dim1)
         vs.forEach { row ->
             Assertions.assertThat(row).hasSize(dim2)
@@ -353,7 +429,7 @@ class ModelExtensionsTest {
         }
     }
 
-    private fun assertOnRealVarMatrix(vs: Array<out Array<out RealVar>>, dim1: Int, dim2: Int, lb: Double, ub: Double, precision: Double, name: String? = null) {
+    private fun assertOnRealVarMatrix(vs: Matrix<RealVar>, dim1: Int, dim2: Int, lb: Double, ub: Double, precision: Double, name: String? = null) {
         Assertions.assertThat(vs).hasSize(dim1)
         vs.forEach { row ->
             Assertions.assertThat(row).hasSize(dim2)
@@ -371,6 +447,6 @@ class ModelExtensionsTest {
     }
 
     private fun assertOnSumConstraint(actual: Constraint, expected: Constraint) {
-        Assertions.assertThat(actual).hasToString(expected.toString())
+        assertOnConstraint(actual, expected)
     }
 }
