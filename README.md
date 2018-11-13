@@ -63,6 +63,19 @@ implementation("ar.com.agomez:choco-ktx:x.y.z")
 ### Model extensions
 
 ```kotlin
+model("my first problem") {
+    val x = intVar("X", 0..5)
+    val y = intVar("Y", 0..5)
+    ((x + y) lt 5).post()
+    ((x * 2 - y) le 50).post()
+    (((x * 2 - y) le 50) or (x - y ge 0)).post()
+    scalar(listOf(2 to x, -1 to y), Operator.GT, 4)
+    maximize(x)
+    solver.setSearch(Search.inputOrderLBSearch(x, y))
+    solver.limitTime(Duration.ofMinutes(2))
+    solver.solveAll()
+    solver.printStatistics()
+}
 ```
 
 For more examples check the API documentation and the tests.

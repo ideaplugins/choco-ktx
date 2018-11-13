@@ -18,12 +18,14 @@ package ar.com.agomez.choco
 
 import org.assertj.core.api.Assertions
 import org.chocosolver.solver.Model
+import org.chocosolver.solver.Solution
 import org.chocosolver.solver.search.limits.TimeCounter
 import org.chocosolver.solver.variables.IntVar
 import org.chocosolver.util.criteria.Criterion
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Duration
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * @author Alejandro Gomez
@@ -56,10 +58,9 @@ class SolverExtensionsTest {
 
     @Test
     fun testSequenceSolutions() {
-        model.solver.solve()
         val solutions = model.solver.sequenceSolutions(TimeCounter(model, Duration.ofSeconds(1).toNanos()))
-        // solutions for x >= y are (4, 3) and (4, 4)
-        Assertions.assertThat(solutions.count()).isEqualTo(2)
+        // solutions for x >= y are (3, 3), (4, 3) and (4, 4)
+        Assertions.assertThat(solutions.count()).isEqualTo(3)
     }
 
     @Test
@@ -68,6 +69,26 @@ class SolverExtensionsTest {
         val solutions = model.solver.sequenceOptimalSolutions(y, true, TimeCounter(model, Duration.ofSeconds(1).toNanos()))
         // the only solution for x >= y maximizing y is (4, 4)
         Assertions.assertThat(solutions.count()).isEqualTo(1)
+    }
+
+    @Test
+    fun testSolveAll() {
+        model.solver.solveAll()
+        // solutions for x >= y are (3, 3), (4, 3) and (4, 4)
+        Assertions.assertThat(model.solver.solutionCount).isEqualTo(3)
+    }
+
+    @Test
+    fun testSolveAllWithBlock() {
+        val solution = Solution(model)
+        val count = AtomicInteger()
+        model.solver.solveAll {
+            solution.record()
+            count.incrementAndGet()
+        }
+        Assertions.assertThat(model.solver.solutionCount).isEqualTo(3)
+        Assertions.assertThat(count.get()).isEqualTo(3)
+        Assertions.assertThat(solution.getIntVal(x)).isGreaterThanOrEqualTo(solution.getIntVal(y))
     }
 
     private fun assertOnSolver(isSolved: Boolean) {
