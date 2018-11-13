@@ -585,3 +585,31 @@ fun Model.among(nbVar: IntVar, vars: Iterable<IntVar>, values: IntArray): Constr
  * @since 0.0.3
  */
 fun Model.among(nbVar: IntVar, vars: Iterable<IntVar>, values: Iterable<Int>): Constraint = among(nbVar, vars.asTypedArray(), values.asIntArray())
+
+/**
+ * Extension for [Model.globalCardinality] that accepts the values as [Iterable].
+ *
+ * @param vars collection of variables.
+ * @param values collection of constrained values.
+ * @param occurrences collection of cardinality variables
+ * @param closed restricts domains of vars to values if set to true
+ * @return A `globalCardinality` constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.5
+ */
+fun Model.globalCardinality(vars: Array<out IntVar>, values: Iterable<Int>, occurrences: Array<out IntVar>, closed: Boolean = true): Constraint =
+        globalCardinality(vars, values.asIntArray(), occurrences, closed)
+
+/**
+ * Extension for [Model.globalCardinality] that accepts the variables and the values as [Iterable].
+ *
+ * @param vars collection of variables.
+ * @param values collection of constrained values.
+ * @param occurrences collection of cardinality variables
+ * @param closed restricts domains of vars to values if set to true
+ * @return A `globalCardinality` constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.5
+ */
+fun Model.globalCardinality(vars: Iterable<IntVar>, values: Iterable<Int>, occurrences: Iterable<IntVar>, closed: Boolean = true): Constraint =
+        globalCardinality(vars.asTypedArray(), values.asIntArray(), occurrences.asTypedArray(), closed)

@@ -83,7 +83,7 @@ model("my first problem") {
 ```kotlin
 model("N queens") {
     val n = 8
-    val q = intVarArray("q", n, 0, n - 1)
+    val q = intVarArray("q", n, 0 until n)
     allDifferent(*q).post()
     (0 until n - 1).forEach { i ->
         (i + 1 until n).forEach { j ->
@@ -158,6 +158,19 @@ model("send+more=money") {
     solver.setSearch(Search.inputOrderLBSearch(s, e, n, d, m, o, r, y))
     solver.showSolutions()
     solver.solveAll()
+}
+```
+
+### Magic sequence
+
+```kotlin
+model("magic sequence") {
+    val n = 10
+    val x = intVarArray("X", n, 0 until n)
+    globalCardinality(x, 0 until n, x).post()
+    solver.showSolutions()
+    solver.solveAll()
+    Assertions.assertThat(solver.solutionCount).isGreaterThan(0)
 }
 ```
 
