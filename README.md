@@ -69,7 +69,7 @@ model("my first problem") {
     ((x + y) lt 5).post()
     ((x * 2 - y) le 50).post()
     (((x * 2 - y) le 50) or (x - y ge 0)).post()
-    scalar(listOf(2 to x, -1 to y), Operator.GT, 4)
+    scalar { listOf(2 * x, -y) gt 4 }
     maximize(x)
     solver.setSearch(Search.inputOrderLBSearch(x, y))
     solver.limitTime(Duration.ofMinutes(2))
