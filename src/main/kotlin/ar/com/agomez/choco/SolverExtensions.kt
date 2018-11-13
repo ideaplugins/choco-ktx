@@ -53,3 +53,16 @@ fun Solver.sequenceSolutions(vararg stop: Criterion): Sequence<Solution> = strea
  * @since 0.0.1
  */
 fun Solver.sequenceOptimalSolutions(objective: IntVar, maximize: Boolean, vararg stop: Criterion): Sequence<Solution> = streamOptimalSolutions(objective, maximize, *stop).asSequence()
+
+/**
+ * Extension for [Solver.solve] to find all solutions.
+ *
+ * @param block The optional block to execute on each on solution.
+ * @author Alejandro Gomez
+ * @since 0.0.2
+ */
+fun Solver.solveAll(block: (() -> Unit)? = null) {
+    while (solve()) {
+        block?.invoke()
+    }
+}
