@@ -1,0 +1,17 @@
+root = true
+
+[*]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+curly_bracket_next_line = false
+spaces_around_operators = true
+spaces_around_brackets = none
+indent_brace_style = K&R
+continuation_indent_size = 8
+
+[*.{yml,sh,raml}]
+indent_size = 2

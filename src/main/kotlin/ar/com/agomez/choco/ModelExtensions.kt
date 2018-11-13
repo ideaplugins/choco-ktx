@@ -1,0 +1,446 @@
+/*
+ * Copyright 2018-present by the authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at following link.
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package ar.com.agomez.choco
+
+import org.chocosolver.solver.Model
+import org.chocosolver.solver.constraints.Constraint
+import org.chocosolver.solver.constraints.Operator
+import org.chocosolver.solver.variables.BoolVar
+import org.chocosolver.solver.variables.IntVar
+import org.chocosolver.solver.variables.RealVar
+import org.chocosolver.solver.variables.Variable
+
+typealias DoubleRange = ClosedFloatingPointRange<Double>
+
+/**
+ *  Top level function acting as a Kotlin shortcut allowing to create a [Model] and execute some code in its context.
+ *
+ * @param name The name of the model.
+ * @param block a lambda with the model as receiver.
+ * @return The created [Model]
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun model(name: String, block: Model.() -> Unit): Model = Model(name).also(block)
+
+/**
+ *  Top level function acting as a Kotlin shortcut allowing to create a [Model] and execute some code in its context.
+ *
+ * @param T the returning type.
+ * @param name The name of the model.
+ * @param block a lambda with the model as receiver.
+ * @return The result of the `block` execution.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun <T> runWithModel(name: String, block: Model.() -> T): T = Model(name).block()
+
+/**
+ * Extension for [Model.intVar] to define an integer variable with values in 0..9 range.
+ *
+ * @param name The name of the variable.
+ * @param boundedDomain Specifies whether to use a bounded domain or an enumerated domain.
+ * @return The created integer variable instance.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.digit(name: String, boundedDomain: Boolean = false) = intVar(name, 0, 9, boundedDomain)
+
+/**
+ * Extension for [Model.intVar] to define an integer variable with values in 1..9 range.
+ *
+ * @param name The name of the variable.
+ * @param boundedDomain Specifies whether to use a bounded domain or an enumerated domain.
+ * @return The created integer variable instance.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.digitNonZero(name: String, boundedDomain: Boolean = false) = intVar(name, 1, 9, boundedDomain)
+
+/**
+ * Extension for [Model.setObjective] to specify the objective variable to minimize.
+ *
+ * @param v The objective variable to minimize.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.minimize(v: Variable) = setObjective(false, v)
+
+/**
+ * Extension for [Model.setObjective] to specify the objective variable to maximize.
+ *
+ * @param v The objective variable to maximize.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.maximize(v: Variable) = setObjective(true, v)
+
+/**
+ * Extension for [Model.intVar] to declare a variable using an [IntRange].
+ *
+ * @param values initial domain bounds.
+ * @return An IntVar of domain `[values.first, values.last]`.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.intVar(values: IntRange): IntVar = intVar(values.first, values.last)
+
+/**
+ * Extension for [Model.intVar] to declare a variable using an [IntRange].
+ *
+ * @param values initial domain bounds.
+ * @param boundedDomain specifies whether to use a bounded domain or an enumerated domain.
+ * @return An IntVar of domain `[values.first, values.last]`.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.intVar(values: IntRange, boundedDomain: Boolean): IntVar = intVar(values.first, values.last, boundedDomain)
+
+/**
+ * Extension for [Model.intVar] to declare a variable using an [IntRange].
+ *
+ * @param name name of the variable.
+ * @param values initial domain bounds.
+ * @return An IntVar of domain `[values.first, values.last]`.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.intVar(name: String, values: IntRange): IntVar = intVar(name, values.first, values.last)
+
+/**
+ * Extension for [Model.intVar] to declare a variable using an [IntRange].
+ *
+ * @param name name of the variable.
+ * @param values initial domain bounds.
+ * @param boundedDomain specifies whether to use a bounded domain or an enumerated domain.
+ * @return An IntVar of domain `[values.first, values.last]`.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.intVar(name: String, values: IntRange, boundedDomain: Boolean): IntVar = intVar(name, values.first, values.last, boundedDomain)
+
+/**
+ * Extension for [Model.intVarArray] to declare a variable array using an [IntRange].
+ *
+ * @param size number of variables.
+ * @param values initial domain bounds.
+ * @return An array of `size` [IntVar] of domain `[values.first, values.last]`.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.intVarArray(size: Int, values: IntRange): Array<out IntVar> = intVarArray(size, values.first, values.last)
+
+/**
+ * Extension for [Model.intVarArray] to declare a variable array using an [IntRange].
+ *
+ * @param size number of variables.
+ * @param values initial domain bounds.
+ * @param boundedDomain specifies whether to use a bounded domain or an enumerated domain.
+ * @return An array of `size` [IntVar] of domain `[values.first, values.last]`.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.intVarArray(size: Int, values: IntRange, boundedDomain: Boolean): Array<out IntVar> = intVarArray(size, values.first, values.last, boundedDomain)
+
+/**
+ * Extension for [Model.intVarArray] to declare a variable array using an [IntRange].
+ *
+ * @param size number of variables.
+ * @param name name of the variables.
+ * @param values initial domain bounds.
+ * @return An array of `size` [IntVar] of domain `[values.first, values.last]`.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.intVarArray(name: String, size: Int, values: IntRange): Array<out IntVar> = intVarArray(name, size, values.first, values.last)
+
+/**
+ * Extension for [Model.intVarArray] to declare a variable array using an [IntRange].
+ *
+ * @param size number of variables.
+ * @param name name of the variables.
+ * @param values initial domain bounds.
+ * @param boundedDomain specifies whether to use a bounded domain or an enumerated domain.
+ * @return An array of `size` [IntVar] of domain `[values.first, values.last]`.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.intVarArray(name: String, size: Int, values: IntRange, boundedDomain: Boolean): Array<out IntVar> = intVarArray(name, size, values.first, values.last, boundedDomain)
+
+/**
+ * Extension for [Model.intVarMatrix] to declare a variable array using an [IntRange].
+ *
+ * @param dim1 number of rows in the matrix.
+ * @param dim2 number of columns in the matrix.
+ * @param values initial domain bounds.
+ * @return A matrix of `dim1 * dim2` [IntVar] of domain `[values.first, values.last]`.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.intVarMatrix(dim1: Int, dim2: Int, values: IntRange): Array<out Array<out IntVar>> = intVarMatrix(dim1, dim2, values.first, values.last)
+
+/**
+ * Extension for [Model.intVarMatrix] to declare a variable array using an [IntRange].
+ *
+ * @param dim1 number of rows in the matrix.
+ * @param dim2 number of columns in the matrix.
+ * @param values initial domain bounds.
+ * @param boundedDomain specifies whether to use a bounded domain or an enumerated domain.
+ * @return A matrix of `dim1 * dim2` [IntVar] of domain `[values.first, values.last]`.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.intVarMatrix(dim1: Int, dim2: Int, values: IntRange, boundedDomain: Boolean): Array<out Array<out IntVar>> = intVarMatrix(dim1, dim2, values.first, values.last, boundedDomain)
+
+/**
+ * Extension for [Model.intVarMatrix] to declare a variable array using an [IntRange].
+ *
+ * @param dim1 number of rows in the matrix.
+ * @param dim2 number of columns in the matrix.
+ * @param name name of the variables.
+ * @param values initial domain bounds.
+ * @return A matrix of `dim1 * dim2` [IntVar] of domain `[values.first, values.last]`.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.intVarMatrix(name: String, dim1: Int, dim2: Int, values: IntRange): Array<out Array<out IntVar>> = intVarMatrix(name, dim1, dim2, values.first, values.last)
+
+/**
+ * Extension for [Model.intVarMatrix] to declare a variable array using an [IntRange].
+ *
+ * @param dim1 number of rows in the matrix.
+ * @param dim2 number of columns in the matrix.
+ * @param name name of the variables.
+ * @param values initial domain bounds.
+ * @param boundedDomain specifies whether to use a bounded domain or an enumerated domain.
+ * @return A matrix of `dim1 * dim2` [IntVar] of domain `[values.first, values.last]`.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.intVarMatrix(name: String, dim1: Int, dim2: Int, values: IntRange, boundedDomain: Boolean): Array<out Array<out IntVar>> = intVarMatrix(name, dim1, dim2, values.first, values.last, boundedDomain)
+
+/**
+ * Extension for [Model.realVar] to declare a variable array using a [DoubleRange].
+ *
+ * @param values initial domain bounds.
+ * @param precision double precision.
+ * @return A [RealVar] of domain `[values.start, values.endInclusive]`.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.realVar(values: DoubleRange, precision: Double): RealVar = realVar(values.start, values.endInclusive, precision)
+
+/**
+ * Extension for [Model.realVar] to declare a variable array using a [DoubleRange].
+ *
+ * @param name name of the variables.
+ * @param values initial domain bounds.
+ * @param precision double precision.
+ * @return A [RealVar] of domain `[values.start, values.endInclusive]`.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.realVar(name: String, values: DoubleRange, precision: Double): RealVar = realVar(name, values.start, values.endInclusive, precision)
+
+/**
+ * Extension for [Model.realVarArray] to declare a variable array using an [DoubleRange].
+ *
+ * @param size number of variables.
+ * @param values initial domain bounds.
+ * @return An array of `size` [RealVar] of domain `[values.start, values.endInclusive]`.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.realVarArray(size: Int, values: DoubleRange, precision: Double): Array<out RealVar> = realVarArray(size, values.start, values.endInclusive, precision)
+
+/**
+ * Extension for [Model.realVarArray] to declare a variable array using an [DoubleRange].
+ *
+ * @param size number of variables.
+ * @param name name of the variables.
+ * @param values initial domain bounds.
+ * @return An array of `size` [RealVar] of domain `[values.start, values.endInclusive]`.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.realVarArray(name: String, size: Int, values: DoubleRange, precision: Double): Array<out RealVar> = realVarArray(name, size, values.start, values.endInclusive, precision)
+
+/**
+ * Extension for [Model.realVarMatrix] to declare a variable array using an [DoubleRange].
+ *
+ * @param dim1 number of rows in the matrix.
+ * @param dim2 number of columns in the matrix.
+ * @param values initial domain bounds.
+ * @return A matrix of `dim1 * dim2` [RealVar] of domain `[values.start, values.endInclusive]`.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.realVarMatrix(dim1: Int, dim2: Int, values: DoubleRange, precision: Double): Array<out Array<out RealVar>> = realVarMatrix(dim1, dim2, values.start, values.endInclusive, precision)
+
+/**
+ * Extension for [Model.realVarMatrix] to declare a variable array using an [DoubleRange].
+ *
+ * @param dim1 number of rows in the matrix.
+ * @param dim2 number of columns in the matrix.
+ * @param name name of the variables.
+ * @param values initial domain bounds.
+ * @return A matrix of `dim1 * dim2` [RealVar] of domain `[values.start, values.endInclusive]`.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.realVarMatrix(name: String, dim1: Int, dim2: Int, values: DoubleRange, precision: Double): Array<out Array<out RealVar>> = realVarMatrix(name, dim1, dim2, values.start, values.endInclusive, precision)
+
+/**
+ * Extension for [Model.scalar] to declare a scalar constraint using pairs of coefficients and variables.
+ *
+ * @param terms pairs of coefficients and variables.
+ * @param operator the operator for the comparison.
+ * @param c the rhs of the comparison.
+ * @return A scalar constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.scalar(terms: Iterable<Pair<Int, IntVar>>, operator: Operator, c: Int): Constraint =
+        scalar(terms.map { it.second }.toTypedArray(), terms.map { it.first }.toIntArray(), operator.toString(), c)
+
+/**
+ * Extension for [Model.scalar] to declare a scalar constraint using pairs of coefficients and variables.
+ *
+ * @param terms pairs of coefficients and variables.
+ * @param operator the operator for the comparison.
+ * @param v the rhs of the comparison.
+ * @return A scalar constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.scalar(terms: Iterable<Pair<Int, IntVar>>, operator: Operator, v: IntVar): Constraint =
+        scalar(terms.map { it.second }.toTypedArray(), terms.map { it.first }.toIntArray(), operator.toString(), v)
+
+/**
+ * Extension for [Model.scalar] to declare a scalar constraint using pairs of coefficients and variables.
+ *
+ * @param terms pairs of coefficients and variables.
+ * @param operator the operator for the comparison.
+ * @param c the rhs of the comparison.
+ * @param minCardForDecomp minimum number of cardinality threshold to a sum constraint to be decomposed.
+ * @return A scalar constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.scalar(terms: Iterable<Pair<Int, IntVar>>, operator: Operator, c: Int, minCardForDecomp: Int): Constraint =
+        scalar(terms.map { it.second }.toTypedArray(), terms.map { it.first }.toIntArray(), operator.toString(), c, minCardForDecomp)
+
+/**
+ * Extension for [Model.scalar] to declare a scalar constraint using pairs of coefficients and variables.
+ *
+ * @param terms pairs of coefficients and variables.
+ * @param operator the operator for the comparison.
+ * @param v the rhs of the comparison.
+ * @param minCardForDecomp minimum number of cardinality threshold to a sum constraint to be decomposed.
+ * @return A scalar constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.scalar(terms: Iterable<Pair<Int, IntVar>>, operator: Operator, v: IntVar, minCardForDecomp: Int): Constraint =
+        scalar(terms.map { it.second }.toTypedArray(), terms.map { it.first }.toIntArray(), operator.toString(), v, minCardForDecomp)
+
+/**
+ * Extension for [Model.sum] to declare a sum constraint using the [Operator] enum.
+ *
+ * @param vars the variables to sum.
+ * @param operator the operator for the comparison.
+ * @param sum the rhs of the comparison.
+ * @return A sum constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.sum(vars: Array<out IntVar>, operator: Operator, sum: Int): Constraint = sum(vars, operator.toString(), sum)
+
+/**
+ * Extension for [Model.sum] to declare a sum constraint using the [Operator] enum.
+ *
+ * @param vars the variables to sum.
+ * @param operator the operator for the comparison.
+ * @param sum the rhs of the comparison.
+ * @param minCardForDecomp minimum number of cardinality threshold to a sum constraint to be decomposed.
+ * @return A sum constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.sum(vars: Array<out IntVar>, operator: Operator, sum: Int, minCardForDecomp: Int): Constraint = sum(vars, operator.toString(), sum, minCardForDecomp)
+
+/**
+ * Extension for [Model.sum] to declare a sum constraint using the [Operator] enum.
+ *
+ * @param vars the variables to sum.
+ * @param operator the operator for the comparison.
+ * @param sum the rhs of the comparison.
+ * @return A sum constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.sum(vars: Array<out IntVar>, operator: Operator, sum: IntVar): Constraint = sum(vars, operator.toString(), sum)
+
+/**
+ * Extension for [Model.sum] to declare a sum constraint using the [Operator] enum.
+ *
+ * @param vars the variables to sum.
+ * @param operator the operator for the comparison.
+ * @param sum the rhs of the comparison.
+ * @param minCardForDecomp minimum number of cardinality threshold to a sum constraint to be decomposed.
+ * @return A sum constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.sum(vars: Array<out IntVar>, operator: Operator, sum: IntVar, minCardForDecomp: Int): Constraint = sum(vars, operator.toString(), sum, minCardForDecomp)
+
+/**
+ * Extension for [Model.sum] to declare a sum constraint using the [Operator] enum.
+ *
+ * @param vars the variables to sum.
+ * @param operator the operator for the comparison.
+ * @param sum the rhs of the comparison.
+ * @return A sum constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.sum(vars: Array<out BoolVar>, operator: Operator, sum: Int): Constraint = sum(vars, operator.toString(), sum)
+
+/**
+ * Extension for [Model.sum] to declare a sum constraint using the [Operator] enum.
+ *
+ * @param vars the variables to sum.
+ * @param operator the operator for the comparison.
+ * @param sum the rhs of the comparison.
+ * @return A sum constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.sum(vars: Array<out BoolVar>, operator: Operator, sum: IntVar): Constraint = sum(vars, operator.toString(), sum)
+
+/**
+ * Extension for [Model.sum] to declare a sum constraint using the [Operator] enum.
+ *
+ * @param vars the variables to sum.
+ * @param operator the operator for the comparison.
+ * @param sum the rhs of the comparison.
+ * @param minCardForDecomp minimum number of cardinality threshold to a sum constraint to be decomposed.
+ * @return A sum constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.1
+ */
+fun Model.sum(vars: Array<out BoolVar>, operator: Operator, sum: IntVar, minCardForDecomp: Int): Constraint = sum(vars, operator.toString(), sum, minCardForDecomp)
