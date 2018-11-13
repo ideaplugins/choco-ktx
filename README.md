@@ -78,6 +78,25 @@ model("my first problem") {
 }
 ```
 
+### N queens problem
+
+```kotlin
+model("N queens") {
+    val n = 8
+    val q = intVarArray("q", n, 0, n - 1)
+    allDifferent(*q).post()
+    (0 until n - 1).forEach { i ->
+        (i + 1 until n).forEach { j ->
+            (q[i] ne (q[j] - (j - i))).post()
+            (q[i] ne (q[j] + (j - i))).post()
+        }
+    }
+    solver.setSearch(Search.inputOrderLBSearch(*q))
+    solver.showSolutions()
+    solver.solveAll()
+}
+```
+
 ### Magic square problem
 
 ```kotlin
@@ -94,6 +113,49 @@ model("magic square") {
     }
     sum { (0 until n).map { i -> m[i][i] } eq d }.post()
     sum { (0 until n).map { i -> m[i][n - i - 1] } eq d }.post()
+    solver.showSolutions()
+    solver.solveAll()
+}
+```
+
+### Send more money problem
+
+```kotlin
+model("send+more=money") {
+    val s = digitNonZero("s")
+    val e = digit("e")
+    val n = digit("n")
+    val d = digit("d")
+    val m = digitNonZero("m")
+    val o = digit("o")
+    val r = digit("r")
+    val y = digit("y")
+    allDifferent(s, e, n, d, m, o, r, y).post()
+    scalar { arrayOf(1000 * s, 100 * e, 10 * n, 1 * d, 1000 * m, 100 * o, 10 * r, 1 * e, -10000 * m, -1000 * o, -100 * n, -10 * e, -1 * y) eq 0 }.post()
+    solver.showSolutions()
+    solver.solveAll()
+}
+```
+
+### Send more money problem (another approach)
+
+```kotlin
+model("send+more=money") {
+    val s = digitNonZero("s")
+    val e = digit("e")
+    val n = digit("n")
+    val d = digit("d")
+    val m = digitNonZero("m")
+    val o = digit("o")
+    val r = digit("r")
+    val y = digit("y")
+    val x = boolVarArray("X", 3)
+    allDifferent(s, e, n, d, m, o, r, y).post()
+    ((d + e) eq (y + (x[0] * 10))).post()
+    ((x[0] + n + r) eq (e + (x[1] * 10))).post()
+    ((x[1] + e + o) eq (n + (x[2] * 10))).post()
+    ((x[2] + s + m) eq (o + (m * 10))).post()
+    solver.setSearch(Search.inputOrderLBSearch(s, e, n, d, m, o, r, y))
     solver.showSolutions()
     solver.solveAll()
 }
