@@ -29,6 +29,8 @@ typealias DoubleRange = ClosedFloatingPointRange<Double>
 
 typealias Matrix<T> = Array<out Array<out T>>
 
+typealias Term = Pair<Int, IntVar>
+
 /**
  *  Top level function acting as a Kotlin shortcut allowing to create a [Model] and execute some code in its context.
  *
@@ -317,7 +319,7 @@ fun Model.realVarMatrix(name: String, dim1: Int, dim2: Int, values: DoubleRange,
  * @author Alejandro Gomez
  * @since 0.0.1
  */
-fun Model.scalar(terms: List<Pair<Int, IntVar>>, operator: Operator, c: Int): Constraint =
+fun Model.scalar(terms: List<Term>, operator: Operator, c: Int): Constraint =
         scalar(terms.map { it.second }.toTypedArray(), terms.map { it.first }.toIntArray(), operator.toString(), c)
 
 /**
@@ -330,7 +332,7 @@ fun Model.scalar(terms: List<Pair<Int, IntVar>>, operator: Operator, c: Int): Co
  * @author Alejandro Gomez
  * @since 0.0.1
  */
-fun Model.scalar(terms: List<Pair<Int, IntVar>>, operator: Operator, v: IntVar): Constraint =
+fun Model.scalar(terms: List<Term>, operator: Operator, v: IntVar): Constraint =
         scalar(terms.map { it.second }.toTypedArray(), terms.map { it.first }.toIntArray(), operator.toString(), v)
 
 /**
@@ -344,7 +346,7 @@ fun Model.scalar(terms: List<Pair<Int, IntVar>>, operator: Operator, v: IntVar):
  * @author Alejandro Gomez
  * @since 0.0.1
  */
-fun Model.scalar(terms: List<Pair<Int, IntVar>>, operator: Operator, c: Int, minCardForDecomp: Int): Constraint =
+fun Model.scalar(terms: List<Term>, operator: Operator, c: Int, minCardForDecomp: Int): Constraint =
         scalar(terms.map { it.second }.toTypedArray(), terms.map { it.first }.toIntArray(), operator.toString(), c, minCardForDecomp)
 
 /**
@@ -358,7 +360,7 @@ fun Model.scalar(terms: List<Pair<Int, IntVar>>, operator: Operator, c: Int, min
  * @author Alejandro Gomez
  * @since 0.0.1
  */
-fun Model.scalar(terms: List<Pair<Int, IntVar>>, operator: Operator, v: IntVar, minCardForDecomp: Int): Constraint =
+fun Model.scalar(terms: List<Term>, operator: Operator, v: IntVar, minCardForDecomp: Int): Constraint =
         scalar(terms.map { it.second }.toTypedArray(), terms.map { it.first }.toIntArray(), operator.toString(), v, minCardForDecomp)
 
 /**

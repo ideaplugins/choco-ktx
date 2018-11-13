@@ -18,6 +18,7 @@ package ar.com.agomez.choco
 
 import org.assertj.core.api.Assertions
 import org.assertj.core.data.Offset
+import org.chocosolver.solver.constraints.Constraint
 import org.chocosolver.solver.expression.continuous.arithmetic.BiCArExpression
 import org.chocosolver.solver.expression.continuous.arithmetic.UnCArExpression
 import org.chocosolver.solver.expression.continuous.relational.BiCReExpression
@@ -94,4 +95,9 @@ fun reflectiveAssert(e1: FixedRealVarImpl, e2: FixedRealVarImpl) {
     Assertions.assertThat(e1.lb).isEqualTo(e2.lb, offset)
     Assertions.assertThat(e1.ub).isEqualTo(e2.ub, offset)
     Assertions.assertThat(e1.precision).isEqualTo(e2.precision, offset)
+}
+
+fun assertOnConstraint(c1: Constraint, c2: Constraint) {
+    Assertions.assertThat(c1).hasSameClassAs(c2)
+    Assertions.assertThat(c1).hasToString(c2.toString())
 }

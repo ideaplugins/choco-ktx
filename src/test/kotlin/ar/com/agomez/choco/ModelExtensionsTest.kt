@@ -449,8 +449,4 @@ class ModelExtensionsTest {
     private fun assertOnSumConstraint(actual: Constraint, expected: Constraint) {
         assertOnConstraint(actual, expected)
     }
-
-    private fun assertOnConstraint(actual: Constraint, expected: Constraint) {
-        Assertions.assertThat(actual).hasToString(expected.toString())
-    }
 }
