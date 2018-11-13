@@ -21,9 +21,6 @@ import org.assertj.core.data.Offset
 import org.chocosolver.solver.expression.continuous.arithmetic.BiCArExpression
 import org.chocosolver.solver.expression.continuous.arithmetic.UnCArExpression
 import org.chocosolver.solver.expression.continuous.relational.BiCReExpression
-import org.chocosolver.solver.expression.discrete.arithmetic.BiArExpression
-import org.chocosolver.solver.expression.discrete.arithmetic.NaArExpression
-import org.chocosolver.solver.expression.discrete.arithmetic.UnArExpression
 import org.chocosolver.solver.expression.discrete.logical.BiLoExpression
 import org.chocosolver.solver.expression.discrete.logical.NaLoExpression
 import org.chocosolver.solver.expression.discrete.relational.BiReExpression
@@ -39,22 +36,6 @@ inline fun <reified T : Any> getProperty(obj: T, name: String) = T::class.member
         .first { it.name == name }
         .also { it.isAccessible = true }
         .get(obj)
-
-fun reflectiveAssert(actual: UnArExpression, expected: UnArExpression) {
-    Assertions.assertThat(getProperty(actual, "op")).isEqualTo(getProperty(expected, "op"))
-    Assertions.assertThat(getProperty(actual, "e")).isEqualTo(getProperty(expected, "e"))
-}
-
-fun reflectiveAssert(actual: BiArExpression, expected: BiArExpression) {
-    Assertions.assertThat(getProperty(actual, "op")).isEqualTo(getProperty(expected, "op"))
-    Assertions.assertThat(getProperty(actual, "e1")).isEqualTo(getProperty(expected, "e1"))
-    Assertions.assertThat(getProperty(actual, "e2")).isEqualTo(getProperty(expected, "e2"))
-}
-
-fun reflectiveAssert(actual: NaArExpression, expected: NaArExpression) {
-    Assertions.assertThat(getProperty(actual, "op")).isEqualTo(getProperty(expected, "op"))
-    Assertions.assertThat(getProperty(actual, "es")).isEqualTo(getProperty(expected, "es"))
-}
 
 fun reflectiveAssert(actual: BiReExpression, expected: BiReExpression) {
     Assertions.assertThat(getProperty(actual, "op")).isEqualTo(getProperty(expected, "op"))

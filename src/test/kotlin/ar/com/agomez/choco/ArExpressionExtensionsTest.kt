@@ -204,12 +204,20 @@ class ArExpressionExtensionsTest {
 
     private fun assertEqualExpressions(actual: ArExpression, expected: ArExpression) {
         Assertions.assertThat(actual).hasToString(expected.toString())
-        if (actual is UnArExpression && expected is UnArExpression) {
-            reflectiveAssert(actual, expected)
-        } else if (actual is BiArExpression && expected is BiArExpression) {
-            reflectiveAssert(actual, expected)
-        } else if (actual is NaArExpression && expected is NaArExpression) {
-            reflectiveAssert(actual, expected)
+        Assertions.assertThat(actual).hasSameClassAs(expected)
+        if (actual is UnArExpression || actual is BiArExpression || actual is NaArExpression) {
+            if (actual is BiArExpression && expected is BiArExpression) {
+                Assertions.assertThat(actual.op).isEqualTo(expected.op)
+            }
+            if (actual is NaArExpression && expected is NaArExpression) {
+                Assertions.assertThat(actual.op).isEqualTo(expected.op)
+            }
+            if (actual is UnArExpression || actual is BiArExpression || actual is NaArExpression) {
+                Assertions.assertThat(actual.expressionChild).hasSameSizeAs(expected.expressionChild)
+                actual.expressionChild.zip(expected.expressionChild).forEach {
+                    Assertions.assertThat(it.first).isEqualTo(it.second)
+                }
+            }
         } else if (actual is BiReExpression && expected is BiReExpression) {
             reflectiveAssert(actual, expected)
         } else if (actual is NaReExpression && expected is NaReExpression) {
