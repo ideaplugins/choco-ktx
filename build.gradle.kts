@@ -18,11 +18,11 @@ val kotlinVersion = plugins.getPlugin(KotlinPluginWrapper::class.java).kotlinPlu
 
 plugins {
     val versions = object {
-        val kotlin = "1.3.0"
+        val kotlin = "1.3.10"
         val bintray = "1.8.4"
-        val ktlint = "6.2.0"
+        val ktlint = "6.3.0"
         val buildScan = "1.16"
-        val detekt = "1.0.0.RC9.2"
+        val detekt = "1.0.0-RC10"
         val dokka = "0.9.17"
         val coveralls = "2.8.2"
         val springRelease = "0.20.1"
@@ -33,7 +33,7 @@ plugins {
     id("com.jfrog.bintray").version(versions.bintray)
     id("org.jlleitschuh.gradle.ktlint").version(versions.ktlint)
     id("com.gradle.build-scan").version(versions.buildScan)
-    //id("io.gitlab.arturbosch.detekt").version(versions.detekt)
+    id("io.gitlab.arturbosch.detekt").version(versions.detekt)
     id("org.jetbrains.dokka").version(versions.dokka)
     id("com.github.kt3k.coveralls").version(versions.coveralls)
     id("io.spring.release").version(versions.springRelease)
@@ -129,13 +129,15 @@ bintray {
     })
 }
 
-/*
 detekt {
     config = files("$rootDir/detekt-config.yml")
     disableDefaultRuleSets = true
     debug = true
 }
-*/
+
+coveralls {
+    sourceDirs = sourceDirs + "src/main/kotlin"
+}
 
 tasks {
     withType<KotlinCompile>().configureEach {

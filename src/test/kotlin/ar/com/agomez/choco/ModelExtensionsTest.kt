@@ -368,6 +368,16 @@ class ModelExtensionsTest {
         assertOnConstraint(model.among(x, listOf(x, y, z), listOf(1, 2)), model.among(x, arrayOf(x, y, z), intArrayOf(1, 2)))
     }
 
+    @Test
+    fun testGlobalCardinality() {
+        assertOnConstraint(model.globalCardinality(arrayOf(x, y, z), 1..3, arrayOf(x, y, z)), model.globalCardinality(arrayOf(x, y, z), intArrayOf(1, 2, 3), arrayOf(x, y, z), true))
+    }
+
+    @Test
+    fun testGlobalCardinalityList() {
+        assertOnConstraint(model.globalCardinality(listOf(x, y, z), 1..3, listOf(x, y, z), false), model.globalCardinality(arrayOf(x, y, z), intArrayOf(1, 2, 3), arrayOf(x, y, z), false))
+    }
+
     private fun assertOnIntVar(v: IntVar, lb: Int, ub: Int, name: String? = null, hasEnumeratedDomain: Boolean? = null) {
         Assertions.assertThat(v.lb).isEqualTo(lb)
         Assertions.assertThat(v.ub).isEqualTo(ub)
