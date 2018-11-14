@@ -67,7 +67,7 @@ model("my first problem") {
     val x = intVar("X", 0..5)
     val y = intVar("Y", 0..5)
     ((x + y) lt 5).post()
-    ((x * 2 - y) le 50).post()
+    ((2 * x - y) le 50).post()
     (((x * 2 - y) le 50) or (x - y ge 0)).post()
     scalar { (-2 * x - y + z) ge 0 }
     maximize(x)
