@@ -160,6 +160,14 @@ class ScalarExtensionsTest {
     }
 
     @Test
+    fun testScalarExpression() {
+        assertOnConstraint(model.scalar { (-x + 2 * y - z) ge 0 }, model.scalar(arrayOf(x, y, z), intArrayOf(-1, 2, -1), ">=", 0))
+        assertOnConstraint(model.scalar { (-2 * x + y - 3 * z) ge 0 }, model.scalar(arrayOf(x, y, z), intArrayOf(-2, 1, -3), ">=", 0))
+        assertOnConstraint(model.scalar { (-2 * x - y + z) ge 0 }, model.scalar(arrayOf(x, y, z), intArrayOf(-2, -1, 1), ">=", 0))
+        assertOnConstraint(model.scalar { (-2 * x - 2 * y + 2 * z) ge 0 }, model.scalar(arrayOf(x, y, z), intArrayOf(-2, -2, 2), ">=", 0))
+    }
+
+    @Test
     fun testScalarListConstantWithCardinality() {
         assertOnConstraint(model.scalar(8) { listOf(-x, 2 * y, -3 * z) ge 10 }, model.scalar(arrayOf(x, y, z), intArrayOf(-1, 2, -3), ">=", 10, 8))
     }
