@@ -66,6 +66,7 @@ implementation("ar.com.agomez:choco-ktx:x.y.z")
 model("my first problem") {
     val x = intVar("X", 0..5)
     val y = intVar("Y", 0..5)
+    val z = intVar("Z", 5..10)
     ((x + y) lt 5).post()
     ((2 * x - y) le 50).post()
     (((x * 2 - y) le 50) or (x - y ge 0)).post()
@@ -170,7 +171,6 @@ model("magic sequence") {
     globalCardinality(x, 0 until n, x).post()
     solver.showSolutions()
     solver.solveAll()
-    Assertions.assertThat(solver.solutionCount).isGreaterThan(0)
 }
 ```
 
