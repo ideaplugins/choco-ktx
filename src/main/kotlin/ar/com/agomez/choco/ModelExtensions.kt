@@ -31,6 +31,8 @@ typealias Matrix<T> = Array<out Array<out T>>
 
 typealias Term = Pair<Int, IntVar>
 
+operator fun Term.unaryMinus() = Term(-first, second)
+
 /**
  *  Top level function acting as a Kotlin shortcut allowing to create a [Model] and execute some code in its context.
  *

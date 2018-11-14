@@ -80,6 +80,20 @@ object TermExpressionScope {
     operator fun IntVar.unaryMinus(): Term = -1 to this
 
     operator fun Int.times(v: IntVar): Term = this to v
+
+    operator fun Term.plus(expr: Term): List<Term> = listOf(this, expr)
+
+    operator fun Term.plus(expr: IntVar): List<Term> = listOf(this, 1 * expr)
+
+    operator fun Term.minus(expr: Term): List<Term> = listOf(this, -expr)
+
+    operator fun Term.minus(expr: IntVar): List<Term> = listOf(this, -expr)
+
+    operator fun List<Term>.plus(expr: IntVar): List<Term> = this + 1 * expr
+
+    operator fun List<Term>.minus(expr: IntVar): List<Term> = this + -expr
+
+    operator fun List<Term>.minus(expr: Term): List<Term> = this + -expr
 }
 
 /**
