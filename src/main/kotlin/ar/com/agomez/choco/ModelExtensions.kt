@@ -351,6 +351,7 @@ fun Model.realVarMatrix(name: String, dim1: Int, dim2: Int, values: DoubleRange,
 
 /**
  * Extension for [Model.scalar] to declare a scalar constraint using pairs of coefficients and variables.
+ * Sample: `scalar(listOf(2 to v, -1 to w, 3 to x, -2 to y), Operator.GE, 10)`
  *
  * @param terms pairs of coefficients and variables.
  * @param operator the operator for the comparison.
@@ -364,6 +365,7 @@ fun Model.scalar(terms: List<Term>, operator: Operator, c: Int): Constraint =
 
 /**
  * Extension for [Model.scalar] to declare a scalar constraint using pairs of coefficients and variables.
+ * Sample: `scalar(listOf(2 to v, -1 to w, 3 to x, -2 to y), Operator.GE, z)`
  *
  * @param terms pairs of coefficients and variables.
  * @param operator the operator for the comparison.
@@ -377,6 +379,7 @@ fun Model.scalar(terms: List<Term>, operator: Operator, v: IntVar): Constraint =
 
 /**
  * Extension for [Model.scalar] to declare a scalar constraint using pairs of coefficients and variables.
+ * Sample: `scalar(listOf(2 to v, -1 to w, 3 to x, -2 to y), Operator.GE, 0, 4)`
  *
  * @param terms pairs of coefficients and variables.
  * @param operator the operator for the comparison.
@@ -391,6 +394,7 @@ fun Model.scalar(terms: List<Term>, operator: Operator, c: Int, minCardForDecomp
 
 /**
  * Extension for [Model.scalar] to declare a scalar constraint using pairs of coefficients and variables.
+ * Sample: `scalar(listOf(2 to v, -1 to w, 3 to x, -2 to y), Operator.GE, z, 4)`
  *
  * @param terms pairs of coefficients and variables.
  * @param operator the operator for the comparison.
@@ -540,6 +544,14 @@ fun Model.sum(vars: Array<out BoolVar>, operator: Operator, sum: IntVar): Constr
  */
 fun Model.sum(vars: Array<out BoolVar>, operator: Operator, sum: IntVar, minCardForDecomp: Int): Constraint = sum(vars, operator.toString(), sum, minCardForDecomp)
 
+/**
+ * Extension for [Model.allDifferent] that accepts the variables as [Iterable].
+ *
+ * @param vars the list of variables.
+ * @return An `allDifferent` constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.3
+ */
 fun Model.allDifferent(vars: Iterable<IntVar>): Constraint = allDifferent(*vars.asTypedArray())
 
 /**
