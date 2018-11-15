@@ -390,6 +390,20 @@ class ModelExtensionsTest {
     }
 
     @Test
+    fun testAndBoolVars() {
+        val v1 = model.boolVar("v1")
+        val v2 = model.boolVar("v2")
+        assertOnConstraint(model.andV(listOf(v1, v2)), model.and(v1, v2), """ARITHM \(\[IV_[\d]+ = 2]\)""")
+    }
+
+    @Test
+    fun testAndConstraints() {
+        val c1 = model.allEqual(x, y)
+        val c2 = model.notAllEqual(y, z)
+        assertOnConstraint(model.andC(listOf(c1, c2)), model.and(c1, c2), """ARITHM \(\[IV_[\d]+ = 2]\)""")
+    }
+
+    @Test
     fun testGlobalCardinality() {
         assertOnConstraint(model.globalCardinality(arrayOf(x, y, z), 1..3, arrayOf(x, y, z)), model.globalCardinality(arrayOf(x, y, z), intArrayOf(1, 2, 3), arrayOf(x, y, z), true))
     }

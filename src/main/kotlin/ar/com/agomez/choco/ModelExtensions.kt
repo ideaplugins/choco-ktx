@@ -639,6 +639,26 @@ fun Model.among(nbVar: IntVar, vars: Iterable<IntVar>, values: IntArray): Constr
 fun Model.among(nbVar: IntVar, vars: Iterable<IntVar>, values: Iterable<Int>): Constraint = among(nbVar, vars.asTypedArray(), values.asIntArray())
 
 /**
+ * Extension for [Model.and] that accepts the variables as [Iterable].
+ *
+ * @param vars the list of variables.
+ * @return An `and` constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.7
+ */
+fun Model.andV(vars: Iterable<BoolVar>): Constraint = and(*vars.asTypedArray())
+
+/**
+ * Extension for [Model.and] that accepts the constraints as [Iterable].
+ *
+ * @param cstrs the list of constraints.
+ * @return An `and` constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.7
+ */
+fun Model.andC(cstrs: Iterable<Constraint>): Constraint = and(*cstrs.asTypedArray())
+
+/**
  * Extension for [Model.globalCardinality] that accepts the values as [Iterable].
  *
  * @param vars collection of variables.
