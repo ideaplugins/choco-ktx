@@ -1,7 +1,7 @@
 # Choco Solver kotlin extensions
 
 [![Build Status](https://travis-ci.org/ideaplugins/choco-ktx.svg?branch=master)](https://travis-ci.org/ideaplugins/choco-ktx)
-[![Bintray](https://img.shields.io/bintray/v/agomez/maven/choco-ktx.svg?maxAge=2592000)](https://bintray.com/agomez/maven/choco-ktx)
+[![Bintray](https://img.shields.io/bintray/v/agomez/maven/choco-ktx.svg)](https://bintray.com/agomez/maven/choco-ktx)
 [![Download](https://api.bintray.com/packages/agomez/maven/choco-ktx/images/download.svg)](https://bintray.com/agomez/maven/choco-ktx/_latestVersion)
 [![Coverage Status](https://coveralls.io/repos/github/ideaplugins/choco-ktx/badge.svg?branch=master)](https://coveralls.io/github/ideaplugins/choco-ktx?branch=master)
 [![Apache 2.0](https://img.shields.io/github/license/ideaplugins/choco-ktx.svg)](http://www.apache.org/licenses/LICENSE-2.0)

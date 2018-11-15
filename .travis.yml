@@ -8,7 +8,7 @@ before_install:
   - chmod +x gradlew
 
 script:
-  - ./gradlew clean build jacocoTestReport
+  - ./gradlew clean build jacocoTestReport coveralls
   - bash <(curl -s https://codecov.io/bash)
 
 deploy:
