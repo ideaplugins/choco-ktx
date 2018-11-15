@@ -97,8 +97,8 @@ object TermExpressionScope {
 }
 
 /**
- * Extension for [Model.scalar] to declare a scalar constraint using the [Operator] enum.
- * Sample: `scalar { arrayOf(2 * v, -w, 3 * x, -2 * y) ge z }`
+ * Extension for [Model.scalar] to declare a scalar constraint using arithmetic expressions.
+ * Sample: `scalar { 2 * v -w + 3 * x -2 * y) ge z }`
  *
  * @param exprBuilder scoped block where operators are defined as infix functions.
  * @return A scalar constraint.
@@ -113,8 +113,8 @@ fun Model.scalar(exprBuilder: TermExpressionScope.() -> TermExpression): Constra
 }
 
 /**
- * Extension for [Model.scalar] to declare a sum constraint using the [Operator] enum.
- * Sample: `scalar(n) { listOf(v, w, x, y) ge z }`
+ * Extension for [Model.scalar] to declare a sum constraint using arithmetic expressions.
+ * Sample: `scalar(n) { 2 * v -w + 3 * x -2 * y) ge z }`
  *
  * @param exprBuilder scoped block where operators are defined as infix functions.
  * @param minCardForDecomp minimum number of cardinality threshold to a scalar constraint to be decomposed.

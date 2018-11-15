@@ -202,6 +202,11 @@ class ArExpressionExtensionsTest {
         assertEqualExpressions(expr1 ge expr2, expr1.ge(expr2))
     }
 
+    @Test
+    fun testConstantTimesArExpression() {
+        assertEqualExpressions(-3 * expr1, expr1.times(-3))
+    }
+
     private fun assertEqualExpressions(actual: ArExpression, expected: ArExpression) {
         Assertions.assertThat(actual).hasToString(expected.toString())
         Assertions.assertThat(actual).hasSameClassAs(expected)

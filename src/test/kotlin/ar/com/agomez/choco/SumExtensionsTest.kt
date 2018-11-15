@@ -160,6 +160,12 @@ class SumExtensionsTest {
     }
 
     @Test
+    fun testSumExpression() {
+        assertOnConstraint(model.sum { (x + y) ge z }, model.sum(arrayOf(x, y), ">=", z))
+        assertOnConstraint(model.sum { (x + y + z) gt 0 }, model.sum(arrayOf(x, y, z), ">", 0))
+    }
+
+    @Test
     fun testSumListConstantWithCardinality() {
         assertOnConstraint(model.sum(8) { listOf(x, y, z) ge 10 }, model.sum(arrayOf(x, y, z), ">=", 10, 8))
     }

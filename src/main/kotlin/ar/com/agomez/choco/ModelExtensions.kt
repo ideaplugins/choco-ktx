@@ -79,6 +79,44 @@ fun Model.digit(name: String, boundedDomain: Boolean = false): IntVar = intVar(n
 fun Model.digitNonZero(name: String, boundedDomain: Boolean = false): IntVar = intVar(name, 1, 9, boundedDomain)
 
 /**
+ * Extension for [Model.boolVar] to define a boolean variable with value true.
+ *
+ * @return The created boolean variable instance.
+ * @author Alejandro Gomez
+ * @since 0.0.7
+ */
+fun Model.trueVar(): BoolVar = boolVar(true)
+
+/**
+ * Extension for [Model.boolVar] to define a boolean variable with value true.
+ *
+ * @param name The name of the variable.
+ * @return The created boolean variable instance.
+ * @author Alejandro Gomez
+ * @since 0.0.7
+ */
+fun Model.trueVar(name: String): BoolVar = boolVar(name, true)
+
+/**
+ * Extension for [Model.boolVar] to define a boolean variable with value false.
+ *
+ * @return The created boolean variable instance.
+ * @author Alejandro Gomez
+ * @since 0.0.7
+ */
+fun Model.falseVar(): BoolVar = boolVar(false)
+
+/**
+ * Extension for [Model.boolVar] to define a boolean variable with value false.
+ *
+ * @param name The name of the variable.
+ * @return The created boolean variable instance.
+ * @author Alejandro Gomez
+ * @since 0.0.7
+ */
+fun Model.falseVar(name: String): BoolVar = boolVar(name, false)
+
+/**
  * Extension for [Model.setObjective] to specify the objective variable to minimize.
  *
  * @param v The objective variable to minimize.
@@ -313,6 +351,7 @@ fun Model.realVarMatrix(name: String, dim1: Int, dim2: Int, values: DoubleRange,
 
 /**
  * Extension for [Model.scalar] to declare a scalar constraint using pairs of coefficients and variables.
+ * Sample: `scalar(listOf(2 to v, -1 to w, 3 to x, -2 to y), Operator.GE, 10)`
  *
  * @param terms pairs of coefficients and variables.
  * @param operator the operator for the comparison.
@@ -326,6 +365,7 @@ fun Model.scalar(terms: List<Term>, operator: Operator, c: Int): Constraint =
 
 /**
  * Extension for [Model.scalar] to declare a scalar constraint using pairs of coefficients and variables.
+ * Sample: `scalar(listOf(2 to v, -1 to w, 3 to x, -2 to y), Operator.GE, z)`
  *
  * @param terms pairs of coefficients and variables.
  * @param operator the operator for the comparison.
@@ -339,6 +379,7 @@ fun Model.scalar(terms: List<Term>, operator: Operator, v: IntVar): Constraint =
 
 /**
  * Extension for [Model.scalar] to declare a scalar constraint using pairs of coefficients and variables.
+ * Sample: `scalar(listOf(2 to v, -1 to w, 3 to x, -2 to y), Operator.GE, 0, 4)`
  *
  * @param terms pairs of coefficients and variables.
  * @param operator the operator for the comparison.
@@ -353,6 +394,7 @@ fun Model.scalar(terms: List<Term>, operator: Operator, c: Int, minCardForDecomp
 
 /**
  * Extension for [Model.scalar] to declare a scalar constraint using pairs of coefficients and variables.
+ * Sample: `scalar(listOf(2 to v, -1 to w, 3 to x, -2 to y), Operator.GE, z, 4)`
  *
  * @param terms pairs of coefficients and variables.
  * @param operator the operator for the comparison.
@@ -502,6 +544,14 @@ fun Model.sum(vars: Array<out BoolVar>, operator: Operator, sum: IntVar): Constr
  */
 fun Model.sum(vars: Array<out BoolVar>, operator: Operator, sum: IntVar, minCardForDecomp: Int): Constraint = sum(vars, operator.toString(), sum, minCardForDecomp)
 
+/**
+ * Extension for [Model.allDifferent] that accepts the variables as [Iterable].
+ *
+ * @param vars the list of variables.
+ * @return An `allDifferent` constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.3
+ */
 fun Model.allDifferent(vars: Iterable<IntVar>): Constraint = allDifferent(*vars.asTypedArray())
 
 /**
@@ -587,6 +637,26 @@ fun Model.among(nbVar: IntVar, vars: Iterable<IntVar>, values: IntArray): Constr
  * @since 0.0.3
  */
 fun Model.among(nbVar: IntVar, vars: Iterable<IntVar>, values: Iterable<Int>): Constraint = among(nbVar, vars.asTypedArray(), values.asIntArray())
+
+/**
+ * Extension for [Model.and] that accepts the variables as [Iterable].
+ *
+ * @param vars the list of variables.
+ * @return An `and` constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.7
+ */
+fun Model.andV(vars: Iterable<BoolVar>): Constraint = and(*vars.asTypedArray())
+
+/**
+ * Extension for [Model.and] that accepts the constraints as [Iterable].
+ *
+ * @param cstrs the list of constraints.
+ * @return An `and` constraint.
+ * @author Alejandro Gomez
+ * @since 0.0.7
+ */
+fun Model.andC(cstrs: Iterable<Constraint>): Constraint = and(*cstrs.asTypedArray())
 
 /**
  * Extension for [Model.globalCardinality] that accepts the values as [Iterable].

@@ -159,6 +159,16 @@ class CArExpressionExtensionsTest {
         assertEqualExpressions(expr1 ge expr2, expr1.ge(expr2))
     }
 
+    @Test
+    fun testIntConstantTimesCArExpression() {
+        assertEqualExpressions(-4 * expr1, expr1.mul(-4.0))
+    }
+
+    @Test
+    fun testDblConstantTimesCArExpression() {
+        assertEqualExpressions(2.1 * expr1, expr1.mul(2.1))
+    }
+
     private fun assertEqualExpressions(actual: CArExpression, expected: CArExpression) {
         Assertions.assertThat(actual).hasToString(expected.toString())
         if (actual is UnCArExpression && expected is UnCArExpression) {

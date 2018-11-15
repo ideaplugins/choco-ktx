@@ -1,7 +1,7 @@
 # Choco Solver kotlin extensions
 
 [![Build Status](https://travis-ci.org/ideaplugins/choco-ktx.svg?branch=master)](https://travis-ci.org/ideaplugins/choco-ktx)
-[![Bintray](https://img.shields.io/bintray/v/agomez/maven/choco-ktx.svg?maxAge=2592000)](https://bintray.com/agomez/maven/choco-ktx)
+[![Bintray](https://img.shields.io/bintray/v/agomez/maven/choco-ktx.svg)](https://bintray.com/agomez/maven/choco-ktx)
 [![Download](https://api.bintray.com/packages/agomez/maven/choco-ktx/images/download.svg)](https://bintray.com/agomez/maven/choco-ktx/_latestVersion)
 [![Coverage Status](https://coveralls.io/repos/github/ideaplugins/choco-ktx/badge.svg?branch=master)](https://coveralls.io/github/ideaplugins/choco-ktx?branch=master)
 [![Apache 2.0](https://img.shields.io/github/license/ideaplugins/choco-ktx.svg)](http://www.apache.org/licenses/LICENSE-2.0)
@@ -66,8 +66,9 @@ implementation("ar.com.agomez:choco-ktx:x.y.z")
 model("my first problem") {
     val x = intVar("X", 0..5)
     val y = intVar("Y", 0..5)
+    val z = intVar("Z", 5..10)
     ((x + y) lt 5).post()
-    ((x * 2 - y) le 50).post()
+    ((2 * x - y) le 50).post()
     (((x * 2 - y) le 50) or (x - y ge 0)).post()
     scalar { (-2 * x - y + z) ge 0 }
     maximize(x)
@@ -170,7 +171,6 @@ model("magic sequence") {
     globalCardinality(x, 0 until n, x).post()
     solver.showSolutions()
     solver.solveAll()
-    Assertions.assertThat(solver.solutionCount).isGreaterThan(0)
 }
 ```
 

@@ -25,6 +25,7 @@ import org.chocosolver.solver.constraints.nary.alldifferent.conditions.Condition
 import org.chocosolver.solver.variables.BoolVar
 import org.chocosolver.solver.variables.IntVar
 import org.chocosolver.solver.variables.RealVar
+import org.chocosolver.util.ESat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.concurrent.atomic.AtomicBoolean
@@ -102,6 +103,26 @@ class ModelExtensionsTest {
         Assertions.assertThat(d.lb).isEqualTo(1)
         Assertions.assertThat(d.ub).isEqualTo(9)
         Assertions.assertThat(d.hasEnumeratedDomain()).isFalse()
+    }
+
+    @Test
+    fun testTrueVar() {
+        assertOnBoolVar(model.trueVar(), true)
+    }
+
+    @Test
+    fun testTrueVarWithName() {
+        assertOnBoolVar(model.trueVar("b"), true, "b")
+    }
+
+    @Test
+    fun testFalseVar() {
+        assertOnBoolVar(model.falseVar(), false)
+    }
+
+    @Test
+    fun testFalseVarWithName() {
+        assertOnBoolVar(model.falseVar("b"), false, "b")
     }
 
     @Test
@@ -369,6 +390,20 @@ class ModelExtensionsTest {
     }
 
     @Test
+    fun testAndBoolVars() {
+        val v1 = model.boolVar("v1")
+        val v2 = model.boolVar("v2")
+        assertOnConstraint(model.andV(listOf(v1, v2)), model.and(v1, v2), """ARITHM \(\[IV_[\d]+ = 2]\)""")
+    }
+
+    @Test
+    fun testAndConstraints() {
+        val c1 = model.allEqual(x, y)
+        val c2 = model.notAllEqual(y, z)
+        assertOnConstraint(model.andC(listOf(c1, c2)), model.and(c1, c2), """ARITHM \(\[IV_[\d]+ = 2]\)""")
+    }
+
+    @Test
     fun testGlobalCardinality() {
         assertOnConstraint(model.globalCardinality(arrayOf(x, y, z), 1..3, arrayOf(x, y, z)), model.globalCardinality(arrayOf(x, y, z), intArrayOf(1, 2, 3), arrayOf(x, y, z), true))
     }
@@ -376,6 +411,13 @@ class ModelExtensionsTest {
     @Test
     fun testGlobalCardinalityList() {
         assertOnConstraint(model.globalCardinality(listOf(x, y, z), 1..3, listOf(x, y, z), false), model.globalCardinality(arrayOf(x, y, z), intArrayOf(1, 2, 3), arrayOf(x, y, z), false))
+    }
+
+    private fun assertOnBoolVar(v: BoolVar, value: Boolean, name: String? = null) {
+        Assertions.assertThat(v.booleanValue).isEqualTo(if (value) ESat.TRUE else ESat.FALSE)
+        name?.run {
+            Assertions.assertThat(v.name).isEqualTo(this)
+        }
     }
 
     private fun assertOnIntVar(v: IntVar, lb: Int, ub: Int, name: String? = null, hasEnumeratedDomain: Boolean? = null) {

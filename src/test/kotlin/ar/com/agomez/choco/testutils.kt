@@ -97,7 +97,11 @@ fun reflectiveAssert(e1: FixedRealVarImpl, e2: FixedRealVarImpl) {
     Assertions.assertThat(e1.precision).isEqualTo(e2.precision, offset)
 }
 
-fun assertOnConstraint(c1: Constraint, c2: Constraint) {
+fun assertOnConstraint(c1: Constraint, c2: Constraint, toStringPattern: String? = null) {
     Assertions.assertThat(c1).hasSameClassAs(c2)
-    Assertions.assertThat(c1).hasToString(c2.toString())
+    if (toStringPattern == null) {
+        Assertions.assertThat(c1).hasToString(c2.toString())
+    } else {
+        Assertions.assertThat(c1.toString()).matches(toStringPattern)
+    }
 }

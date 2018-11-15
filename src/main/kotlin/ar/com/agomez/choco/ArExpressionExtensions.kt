@@ -336,3 +336,14 @@ infix fun ArExpression.ge(c: Int): ReExpression = ge(c)
  * @since 0.0.1
  */
 infix fun ArExpression.ge(e: ArExpression): ReExpression = ge(e)
+
+/**
+ * Extension for [ArExpression.mul] for invoking it as the operator `*` with the constant in first place.
+ *
+ * @receiver The lhs of the operation.
+ * @param e The rhs of the operation.
+ * @return The expression `lhs * rhs`
+ * @author Alejandro Gomez
+ * @since 0.0.7
+ */
+operator fun Int.times(e: ArExpression): ArExpression = e.mul(this)

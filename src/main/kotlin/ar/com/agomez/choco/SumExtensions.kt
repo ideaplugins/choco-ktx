@@ -76,11 +76,19 @@ object IntVarExpressionScope {
     infix fun Array<IntVar>.ge(value: IntVar): IntVarExpression = IntVarVariableExpression(this, Operator.GE, value)
 
     infix fun Iterable<IntVar>.ge(value: IntVar): IntVarExpression = asTypedArray() ge value
+
+    operator fun IntVar.plus(v: IntVar): List<IntVar> = listOf(this, v)
+
+    operator fun List<IntVar>.plus(v: IntVar): List<IntVar> = ArrayList<IntVar>(size + 1).apply {
+        addAll(this@plus)
+        add(v)
+    }
 }
 
 /**
  * Extension for [Model.sum] to declare a sum constraint using the [Operator] enum.
  * Sample: `sum { listOf(v, w, x, y) ge z }`
+ * Sample: `sum { (v + w + x + y) ge z }`
  *
  * @param exprBuilder scoped block where operators are defined as infix functions.
  * @return A sum constraint.
@@ -97,6 +105,7 @@ fun Model.sum(exprBuilder: IntVarExpressionScope.() -> IntVarExpression): Constr
 /**
  * Extension for [Model.sum] to declare a sum constraint using the [Operator] enum.
  * Sample: `sum(n) { listOf(v, w, x, y) ge z }`
+ * Sample: `sum(n) { (v + w + x + y) ge z }`
  *
  * @param exprBuilder scoped block where operators are defined as infix functions.
  * @param minCardForDecomp minimum number of cardinality threshold to a sum constraint to be decomposed.
