@@ -79,6 +79,44 @@ fun Model.digit(name: String, boundedDomain: Boolean = false): IntVar = intVar(n
 fun Model.digitNonZero(name: String, boundedDomain: Boolean = false): IntVar = intVar(name, 1, 9, boundedDomain)
 
 /**
+ * Extension for [Model.boolVar] to define a boolean variable with value true.
+ *
+ * @return The created boolean variable instance.
+ * @author Alejandro Gomez
+ * @since 0.0.7
+ */
+fun Model.trueVar(): BoolVar = boolVar(true)
+
+/**
+ * Extension for [Model.boolVar] to define a boolean variable with value true.
+ *
+ * @param name The name of the variable.
+ * @return The created boolean variable instance.
+ * @author Alejandro Gomez
+ * @since 0.0.7
+ */
+fun Model.trueVar(name: String): BoolVar = boolVar(name, true)
+
+/**
+ * Extension for [Model.boolVar] to define a boolean variable with value false.
+ *
+ * @return The created boolean variable instance.
+ * @author Alejandro Gomez
+ * @since 0.0.7
+ */
+fun Model.falseVar(): BoolVar = boolVar(false)
+
+/**
+ * Extension for [Model.boolVar] to define a boolean variable with value false.
+ *
+ * @param name The name of the variable.
+ * @return The created boolean variable instance.
+ * @author Alejandro Gomez
+ * @since 0.0.7
+ */
+fun Model.falseVar(name: String): BoolVar = boolVar(name, false)
+
+/**
  * Extension for [Model.setObjective] to specify the objective variable to minimize.
  *
  * @param v The objective variable to minimize.
