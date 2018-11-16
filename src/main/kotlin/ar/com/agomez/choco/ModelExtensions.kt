@@ -123,7 +123,7 @@ fun Model.falseVar(name: String): BoolVar = boolVar(name, false)
  * @author Alejandro Gomez
  * @since 0.0.1
  */
-fun Model.minimize(v: Variable) = setObjective(false, v)
+fun Model.minimize(v: Variable) = setObjective(Model.MINIMIZE, v)
 
 /**
  * Extension for [Model.setObjective] to specify the objective variable to maximize.
@@ -132,7 +132,7 @@ fun Model.minimize(v: Variable) = setObjective(false, v)
  * @author Alejandro Gomez
  * @since 0.0.1
  */
-fun Model.maximize(v: Variable) = setObjective(true, v)
+fun Model.maximize(v: Variable) = setObjective(Model.MAXIMIZE, v)
 
 /**
  * Extension for [Model.intVar] to declare a variable using an [IntRange].
