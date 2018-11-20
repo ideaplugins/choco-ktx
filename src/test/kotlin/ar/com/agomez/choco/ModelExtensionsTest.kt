@@ -57,9 +57,11 @@ class ModelExtensionsTest {
     fun testModel() {
         val executed = AtomicBoolean(false)
         val m = model("testModel") {
+            Assertions.assertThat(this).isInstanceOf(Model::class.java)
             Assertions.assertThat(name).isEqualTo("testModel")
             executed.set(true)
         }
+        Assertions.assertThat(m).isInstanceOf(Model::class.java)
         Assertions.assertThat(m.name).isEqualTo("testModel")
         Assertions.assertThat(executed.get()).isTrue()
     }

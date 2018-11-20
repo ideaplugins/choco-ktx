@@ -12,7 +12,7 @@ val artifacId = project.name
 
 fun versionFor(name: String) = project.ext["${name}.version"].toString()
 
-fun dependency(group: String, name: String) = "$group:$name:${versionFor(group)}"
+fun dependency(group: String, name: String, version: String? = null) = "$group:$name:${version ?: versionFor(group)}"
 
 val kotlinVersion = plugins.getPlugin(KotlinPluginWrapper::class.java).kotlinPluginVersion
 
