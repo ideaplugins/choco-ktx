@@ -22,7 +22,7 @@ plugins {
         val bintray = "1.8.4"
         val ktlint = "6.3.0"
         val buildScan = "1.16"
-        val detekt = "1.0.0-RC10"
+        val detekt = "1.0.0-RC11"
         val dokka = "0.9.17"
         val coveralls = "2.8.2"
         val springRelease = "0.20.1"
