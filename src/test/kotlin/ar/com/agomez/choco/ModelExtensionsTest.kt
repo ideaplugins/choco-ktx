@@ -57,9 +57,11 @@ class ModelExtensionsTest {
     fun testModel() {
         val executed = AtomicBoolean(false)
         val m = model("testModel") {
+            Assertions.assertThat(this).isInstanceOf(Model::class.java)
             Assertions.assertThat(name).isEqualTo("testModel")
             executed.set(true)
         }
+        Assertions.assertThat(m).isInstanceOf(Model::class.java)
         Assertions.assertThat(m.name).isEqualTo("testModel")
         Assertions.assertThat(executed.get()).isTrue()
     }
@@ -200,6 +202,15 @@ class ModelExtensionsTest {
     }
 
     @Test
+    fun testIntVarArrayFixed() {
+        val array = model.intVarArrayFixed("v", 3, intArrayOf(1, 2, 3))
+        Assertions.assertThat(array).hasSize(3)
+        assertOnIntVar(array[0], 1, 1, "v[0]")
+        assertOnIntVar(array[1], 2, 2, "v[1]")
+        assertOnIntVar(array[2], 3, 3, "v[2]")
+    }
+
+    @Test
     fun testIntVarMatrixWithRange() {
         assertOnIntVarMatrix(model.intVarMatrix(3, 2, 4..8), 3, 2, 4, 8)
     }
@@ -230,6 +241,21 @@ class ModelExtensionsTest {
     }
 
     @Test
+    fun testIntVarMatrixFixed() {
+        val matrix = model.intVarMatrixFixed("v", 2, 3, arrayOf(intArrayOf(1, 2, 3), intArrayOf(4, 5, 6)))
+        Assertions.assertThat(matrix).hasSize(2)
+        matrix.forEach { row ->
+            Assertions.assertThat(row).hasSize(3)
+        }
+        assertOnIntVar(matrix[0][0], 1, 1, "v[0][0]")
+        assertOnIntVar(matrix[0][1], 2, 2, "v[0][1]")
+        assertOnIntVar(matrix[0][2], 3, 3, "v[0][2]")
+        assertOnIntVar(matrix[1][0], 4, 4, "v[1][0]")
+        assertOnIntVar(matrix[1][1], 5, 5, "v[1][1]")
+        assertOnIntVar(matrix[1][2], 6, 6, "v[1][2]")
+    }
+
+    @Test
     fun testRealVarWithRange() {
         assertOnRealVar(model.realVar(1.0..3.0, 0.001), 1.0, 3.0, 0.001)
     }
@@ -250,6 +276,15 @@ class ModelExtensionsTest {
     }
 
     @Test
+    fun testRealVarArrayFixed() {
+        val array = model.realVarArrayFixed("v", 3, doubleArrayOf(1.1, 2.2, 3.3))
+        Assertions.assertThat(array).hasSize(3)
+        assertOnRealVar(array[0], 1.1, 1.1, name = "v[0]")
+        assertOnRealVar(array[1], 2.2, 2.2, name = "v[1]")
+        assertOnRealVar(array[2], 3.3, 3.3, name = "v[2]")
+    }
+
+    @Test
     fun testRealVarMatrixWithRange() {
         assertOnRealVarMatrix(model.realVarMatrix(4, 3, 1.0..3.0, 0.001), 4, 3, 1.0, 3.0, 0.001)
     }
@@ -257,6 +292,21 @@ class ModelExtensionsTest {
     @Test
     fun testRealVarMatrixWithNameRange() {
         assertOnRealVarMatrix(model.realVarMatrix("v", 4, 3, 1.0..3.0, 0.001), 4, 3, 1.0, 3.0, 0.001, "v")
+    }
+
+    @Test
+    fun testRealVarMatrixFixed() {
+        val matrix = model.realVarMatrixFixed("v", 2, 3, arrayOf(doubleArrayOf(1.1, 2.2, 3.3), doubleArrayOf(4.4, 5.5, 6.6)))
+        Assertions.assertThat(matrix).hasSize(2)
+        matrix.forEach { row ->
+            Assertions.assertThat(row).hasSize(3)
+        }
+        assertOnRealVar(matrix[0][0], 1.1, 1.1, name = "v[0][0]")
+        assertOnRealVar(matrix[0][1], 2.2, 2.2, name = "v[0][1]")
+        assertOnRealVar(matrix[0][2], 3.3, 3.3, name = "v[0][2]")
+        assertOnRealVar(matrix[1][0], 4.4, 4.4, name = "v[1][0]")
+        assertOnRealVar(matrix[1][1], 5.5, 5.5, name = "v[1][1]")
+        assertOnRealVar(matrix[1][2], 6.6, 6.6, name = "v[1][2]")
     }
 
     @Test
@@ -460,10 +510,12 @@ class ModelExtensionsTest {
         }
     }
 
-    private fun assertOnRealVar(v: RealVar, lb: Double, ub: Double, precision: Double, name: String? = null) {
+    private fun assertOnRealVar(v: RealVar, lb: Double, ub: Double, precision: Double? = null, name: String? = null) {
         Assertions.assertThat(v.lb).isEqualTo(lb)
         Assertions.assertThat(v.ub).isEqualTo(ub)
-        Assertions.assertThat(v.precision).isEqualTo(precision)
+        precision?.run {
+            Assertions.assertThat(v.precision).isEqualTo(this)
+        }
         name?.run {
             Assertions.assertThat(v.name).isEqualTo(this)
         }

@@ -123,7 +123,7 @@ fun Model.falseVar(name: String): BoolVar = boolVar(name, false)
  * @author Alejandro Gomez
  * @since 0.0.1
  */
-fun Model.minimize(v: Variable) = setObjective(false, v)
+fun Model.minimize(v: Variable) = setObjective(Model.MINIMIZE, v)
 
 /**
  * Extension for [Model.setObjective] to specify the objective variable to maximize.
@@ -132,7 +132,7 @@ fun Model.minimize(v: Variable) = setObjective(false, v)
  * @author Alejandro Gomez
  * @since 0.0.1
  */
-fun Model.maximize(v: Variable) = setObjective(true, v)
+fun Model.maximize(v: Variable) = setObjective(Model.MAXIMIZE, v)
 
 /**
  * Extension for [Model.intVar] to declare a variable using an [IntRange].
@@ -227,6 +227,20 @@ fun Model.intVarArray(name: String, size: Int, values: IntRange): Array<out IntV
 fun Model.intVarArray(name: String, size: Int, values: IntRange, boundedDomain: Boolean): Array<out IntVar> = intVarArray(name, size, values.first, values.last, boundedDomain)
 
 /**
+ * Extension for [Model.intVarArray] to declare an array of variables each one with a different value.
+ *
+ * @param size number of variables.
+ * @param name name of the variables.
+ * @param values initial values.
+ * @return An array of `size` [IntVar] of domain `values[i]`.
+ * @author Alejandro Gomez
+ * @since 0.0.8
+ */
+fun Model.intVarArrayFixed(name: String, size: Int, values: IntArray): Array<IntVar> = Array(size) { i ->
+    intVar("$name[$i]", values[i])
+}
+
+/**
  * Extension for [Model.intVarMatrix] to declare a variable array using an [IntRange].
  *
  * @param dim1 number of rows in the matrix.
@@ -279,6 +293,23 @@ fun Model.intVarMatrix(name: String, dim1: Int, dim2: Int, values: IntRange): Ma
 fun Model.intVarMatrix(name: String, dim1: Int, dim2: Int, values: IntRange, boundedDomain: Boolean): Matrix<IntVar> = intVarMatrix(name, dim1, dim2, values.first, values.last, boundedDomain)
 
 /**
+ * Extension for [Model.intVarMatrix] to declare a matrix of variables each one with a different value.
+ *
+ * @param dim1 number of rows in the matrix.
+ * @param dim2 number of columns in the matrix.
+ * @param name name of the variables.
+ * @param values initial values.
+ * @return A matrix of `dim1 * dim2` [IntVar] of domain `values[i, j]`.
+ * @author Alejandro Gomez
+ * @since 0.0.8
+ */
+fun Model.intVarMatrixFixed(name: String, dim1: Int, dim2: Int, values: Array<IntArray>): Array<Array<IntVar>> = Array(dim1) { i ->
+    Array(dim2) { j ->
+        intVar("$name[$i][$j]", values[i][j])
+    }
+}
+
+/**
  * Extension for [Model.realVar] to declare a variable array using a [DoubleRange].
  *
  * @param values initial domain bounds.
@@ -325,6 +356,20 @@ fun Model.realVarArray(size: Int, values: DoubleRange, precision: Double): Array
 fun Model.realVarArray(name: String, size: Int, values: DoubleRange, precision: Double): Array<out RealVar> = realVarArray(name, size, values.start, values.endInclusive, precision)
 
 /**
+ * Extension for [Model.realVarArray] to declare an array of variables each one with a different value.
+ *
+ * @param size number of variables.
+ * @param name name of the variables.
+ * @param values initial values.
+ * @return An array of `size` [RealVar] of domain `values[i]`.
+ * @author Alejandro Gomez
+ * @since 0.0.8
+ */
+fun Model.realVarArrayFixed(name: String, size: Int, values: DoubleArray): Array<RealVar> = Array(size) { i ->
+    realVar("$name[$i]", values[i])
+}
+
+/**
  * Extension for [Model.realVarMatrix] to declare a variable array using an [DoubleRange].
  *
  * @param dim1 number of rows in the matrix.
@@ -348,6 +393,23 @@ fun Model.realVarMatrix(dim1: Int, dim2: Int, values: DoubleRange, precision: Do
  * @since 0.0.1
  */
 fun Model.realVarMatrix(name: String, dim1: Int, dim2: Int, values: DoubleRange, precision: Double): Matrix<RealVar> = realVarMatrix(name, dim1, dim2, values.start, values.endInclusive, precision)
+
+/**
+ * Extension for [Model.realVarMatrix] to declare a matrix of variables each one with a different value.
+ *
+ * @param dim1 number of rows in the matrix.
+ * @param dim2 number of columns in the matrix.
+ * @param name name of the variables.
+ * @param values initial values.
+ * @return A matrix of `dim1 * dim2` [RealVar] of domain `values[i, j]`.
+ * @author Alejandro Gomez
+ * @since 0.0.8
+ */
+fun Model.realVarMatrixFixed(name: String, dim1: Int, dim2: Int, values: Array<DoubleArray>): Array<Array<RealVar>> = Array(dim1) { i ->
+    Array(dim2) { j ->
+        realVar("$name[$i][$j]", values[i][j])
+    }
+}
 
 /**
  * Extension for [Model.scalar] to declare a scalar constraint using pairs of coefficients and variables.
